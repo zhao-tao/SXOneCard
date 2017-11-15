@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_logo" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="622dp"
+        android:background="@drawable/bg"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="91dp"
+            android:layout_marginLeft="120dp"
+            android:layout_marginRight="120dp">
+
+            <EditText
+                android:id="@+id/inputMoney"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="68dp"
+                android:layout_marginRight="68dp"
+                android:layout_marginTop="30dp"
+                android:background="@color/input_background"
+                android:gravity="center"
+                android:textColor="@color/dark"
+                android:textSize="35sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="6dp"
+                android:text="@string/choose_amount"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/sub_title_size" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="2dp"
+                android:background="@color/line_color" />
+        </RelativeLayout>
+
+        <GridView
+            android:id="@+id/inputPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:horizontalSpacing="9dp"
+            android:numColumns="4"
+            android:paddingLeft="195dp"
+            android:paddingRight="195dp"
+            android:verticalSpacing="9dp" />
+    </LinearLayout>
+</LinearLayout>

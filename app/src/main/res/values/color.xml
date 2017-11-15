@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="sanCard">#333333</color>
+    <color name="title_red">#f34d98</color>
+    <color name="hint_gray">#999999</color>
+    <color name="dark">#000000</color>
+    <color name="white">#FFFFFF</color><!--白色 -->
+    <color name="service_blue">#509efe</color>
+    <color name="background">#f9f9f9</color>
+    <color name="input_background">#eeeeee</color>
+    <color name="text_color">#3185FF</color>
+    <color name="line_color">#D3D3D3</color>
+    <color name="title_color">#338FFF</color>
+</resources>

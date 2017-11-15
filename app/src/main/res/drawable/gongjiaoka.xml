@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item
+        android:drawable="@drawable/gongjiaoka1"
+        android:duration="200" />
+    <item
+        android:drawable="@drawable/gongjiaoka2"
+        android:duration="200" />
+    <item
+        android:drawable="@drawable/gongjiaoka3"
+        android:duration="200" />
+    <item
+        android:drawable="@drawable/gongjiaoka4"
+        android:duration="200" />
+    <item
+        android:drawable="@drawable/gongjiaoka5"
+        android:duration="200" />
+    <item
+        android:drawable="@drawable/gongjiaoka6"
+        android:duration="200" />
+</animation-list>

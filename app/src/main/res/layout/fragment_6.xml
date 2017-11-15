@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_logo" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="622dp"
+        android:background="@drawable/bg">
+
+        <LinearLayout
+            android:id="@+id/scan_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="91dp"
+                android:layout_marginLeft="120dp"
+                android:layout_marginRight="120dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="6dp"
+                    android:text="@string/san_pay_code"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/sub_title_size" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/line_color" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp">
+
+                <RelativeLayout
+                    android:layout_width="460dp"
+                    android:layout_height="386dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/qr_bg">
+
+                    <TextView
+                        android:id="@+id/secondTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="30dp"
+                        android:gravity="center"
+                        android:textSize="30dp" />
+
+                    <ImageView
+                        android:id="@+id/qrImage"
+                        android:layout_width="274dp"
+                        android:layout_height="274dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="80dp" />
+
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        Y
+
+        <ImageView
+            android:id="@+id/progress_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/charge_progress"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?><!--这里建议使用GridView来做-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_logo" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="622dp"
+        android:background="@drawable/bg"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="@color/text_color"
+                android:paddingLeft="20dp"
+                android:text="返回"
+                android:textSize="24dp" />
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="91dp"
+            android:layout_marginLeft="120dp"
+            android:layout_marginRight="120dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="6dp"
+                android:text="@string/choose_amount"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/sub_title_size" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="2dp"
+                android:background="@color/line_color" />
+        </RelativeLayout>
+
+        <GridView
+            android:id="@+id/price_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="195dp"
+            android:layout_marginRight="195dp"
+            android:layout_marginTop="60dp"
+            android:horizontalSpacing="30dp"
+            android:numColumns="3"
+            android:verticalSpacing="14dp" />
+    </LinearLayout>
+</LinearLayout>

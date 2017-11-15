@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SXOneCard</string>
+    <string name="first_page_textView">请将您的长安通卡放在感应区</string>
+    <string name="recharge_number">请输入您的充值金额</string>
+    <string name="choose_amount">请选择充值金额</string>
+    <string name="yu_e">卡内当前余额:</string>
+    <string name="selectPayWay">请选择支付方式</string>
+    <string name="rechange_money">充值金额:100元</string>
+    <string name="san_pay_code">请扫描二维码完成支付</string>
+    <string name="service_type">请选择服务类型</string>
+    <string name="recharge_succ">充值成功！请拿走您的卡片.</string>
+    <string name="card_yue">卡内余额:</string>
+    <string name="chargeError">抱歉，充值失败，请联系客服</string>
+    <string name="chargeExpired">充值失败！您的二维码已过期，请取走您的卡片！</string>
+    <string name="deviceErr">设备维护中,请稍后......</string>
+</resources>

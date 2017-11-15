@@ -1,0 +1,139 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@layout/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="top"
+    >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/TextView03"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:gravity="center"
+            android:text="科威尼迪科技 18688112694"
+            android:textColor="#ff0000"
+            android:textSize="30sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/But_text_send_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="test_send_file_click"
+                android:text="触发文件传输"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/ButtonHandshake"
+                android:layout_width="168dp"
+                android:layout_height="wrap_content"
+                android:text="握手"
+                android:onClick="handshake_click"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/ButtonPoll"
+                android:layout_width="212dp"
+                android:layout_height="wrap_content"
+                android:onClick="poll_click"
+                android:text="模拟交易"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/ButtonClr"
+                android:layout_width="144dp"
+                android:layout_height="wrap_content"
+                android:text="清空"
+                                android:onClick="clr_click"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/Button02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="test_set_arg_click"
+                android:text="测试设置功能"
+                android:textSize="30sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/Button03"
+                                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="test_update_click"
+                android:text="测试自动更新"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/Button_SetPara"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="测试加密"
+                android:onClick="test_aes_click"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/Button_SendWord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="测试md5"
+                android:onClick="test_md5_click"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/Button_GetPara"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="测试网络连接"
+                                android:onClick="test_net_click"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/Button01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:onClick="test_Imei_click"
+                android:text="获取IMEI号"
+                android:textSize="30sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/txt_ret"
+        android:layout_width="wrap_content"
+        android:layout_height="40mm"
+        android:layout_alignLeft="@+id/linearLayout1"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/linearLayout1"
+        android:editable="false"
+        android:ems="10" >
+
+    </EditText>
+
+</RelativeLayout>
