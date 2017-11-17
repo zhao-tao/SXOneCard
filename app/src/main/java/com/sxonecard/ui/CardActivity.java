@@ -59,12 +59,10 @@ public class CardActivity extends FragmentActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //  百度统计接入
-        // 获取测试设备ID
+        // 百度统计获取测试设备ID
 //        String testDeviceId = StatService.getTestDeviceId(this);
 //        android.util.Log.d("BaiduMobStat", "Test DeviceId : " + testDeviceId);
-        // 日志输出
+        // 百度统计日志输出
         StatService.setDebugOn(true);
         StatService.setSendLogStrategy(this, SendStrategyEnum.APP_START, 1, false);
 
@@ -73,17 +71,14 @@ public class CardActivity extends FragmentActivity {
 //                .withLocationServiceEnabled(true)
 //                .start(getApplicationContext());
 
-
         setContentView(R.layout.activity_card);
         ButterKnife.bind(this);
         initView();
-        //初始化设备
-        initDevice();
         registerBus();
-        //请求默认广告
-        defaultads();
-        // FIXME: 2017/11/17 
-        LogcatHelper.getInstance().start();
+        initDevice();
+//        defaultads();
+        // FIXME: 2017/11/17
+//        LogcatHelper.getInstance().start();
     }
 
     /**
@@ -143,6 +138,7 @@ public class CardActivity extends FragmentActivity {
                     navHandler.sendEmptyMessage(0);
                     //请求初始化设置
                     initConfiguration();
+                    defaultads();
                 }
             }
         });
@@ -206,8 +202,10 @@ public class CardActivity extends FragmentActivity {
         fragmentTransaction.commitAllowingStateLoss();
     }
 
+    /**
+     * 获取默认广告
+     */
     private void defaultads() {
-        // 默认广告
         HttpDataListener listener = new HttpDataListener<AdResult>() {
             @Override
             public void onNext(AdResult result) {
@@ -215,6 +213,7 @@ public class CardActivity extends FragmentActivity {
                     AdBean bean = result.getData().get(0);
                     Gson gson = new Gson();
                     String default_ads = gson.toJson(bean);
+                    Log.i(TAG, default_ads);
                     // 保存对象
                     SharedPreferences.Editor sharedata = getApplication()
                             .getSharedPreferences("sxcard", MODE_PRIVATE).edit();

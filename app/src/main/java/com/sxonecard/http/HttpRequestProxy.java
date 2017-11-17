@@ -51,12 +51,10 @@ public class HttpRequestProxy {
                         .addHeader("User-Agent", "").build();
                 return chain.proceed(request);
             }
-        })
-                .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+        }).addInterceptor(logging).connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-//                .addInterceptor(logging)
-        ;
+                .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+
 //        GsonBuilder gsonBuilder = new GsonBuilder().registerTypeAdapter(OrderInfo.class, new OrderInfoAdapter());
         retrofit = new Retrofit.Builder()
                 .client(builder.build())

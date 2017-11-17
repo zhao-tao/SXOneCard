@@ -34,6 +34,7 @@ public class SerialPort {
     private ReadThread mReadThread;
     private String path = "/dev/ttyS3";
     private int baudrate = 115200;
+    //串口开关
     private boolean isStop = false;
 
     public static SerialPort getInstance() {

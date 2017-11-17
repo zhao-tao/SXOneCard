@@ -5,6 +5,7 @@ package com.sxonecard.http.bean;
  */
 
 public class SetBean {
+    // FIXME: 2017/11/17 初始化所有变量
 
     private String StartTime;
 

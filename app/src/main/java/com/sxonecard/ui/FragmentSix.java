@@ -151,7 +151,7 @@ public class FragmentSix extends BaseFragment {
 
             @Override
             public void onFinish() {
-                Log.i("倒计时轮询结束....", DateUtil.getCurrentDateTime());
+                Log.i("fragment", DateUtil.getCurrentDateTime());
                 secondTime.setVisibility(View.GONE);
                 checkPayResult();
             }
