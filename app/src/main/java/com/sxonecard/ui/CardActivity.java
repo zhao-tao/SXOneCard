@@ -1,6 +1,7 @@
 package com.sxonecard.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -20,6 +21,7 @@ import com.baidu.mobstat.StatService;
 import com.google.gson.Gson;
 import com.sxonecard.CardApplication;
 import com.sxonecard.R;
+import com.sxonecard.background.HeartBeatService;
 import com.sxonecard.base.BaseFragment;
 import com.sxonecard.base.RxBus;
 import com.sxonecard.http.HttpDataListener;
@@ -80,6 +82,7 @@ public class CardActivity extends FragmentActivity {
         registerBus();
         //请求默认广告
         defaultads();
+        // FIXME: 2017/11/17 
         LogcatHelper.getInstance().start();
     }
 
@@ -104,8 +107,8 @@ public class CardActivity extends FragmentActivity {
                 syncTimeAndShutDownDevice();
                 if (!android_update(set)) {
                     //开启心跳服务
-//                    Intent intent = new Intent(getApplicationContext(), HeartBeatService.class);
-//                    startService(intent);
+                    Intent intent = new Intent(getApplicationContext(), HeartBeatService.class);
+                    startService(intent);
                 }
             }
 

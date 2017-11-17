@@ -41,7 +41,6 @@ public class HeartBeatBroadcastReceiver extends BroadcastReceiver {
         if (CardApplication.getInstance().getConfig() != null)
             period = CardApplication.getInstance().getConfig().getRunRate();
         //未到时间
-        upload(context);
         if (currentCount % period != 0)
             return;
         //上传错误日志
@@ -66,6 +65,10 @@ public class HeartBeatBroadcastReceiver extends BroadcastReceiver {
                 context, false), param);
     }
 
+    /**
+     * 上传log日志
+     * @param context
+     */
     private void upload(Context context) {
         String path = Environment.getExternalStorageDirectory().getAbsolutePath();
         File dir = new File(path + File.separator + "citypass");
@@ -220,6 +223,10 @@ public class HeartBeatBroadcastReceiver extends BroadcastReceiver {
 
     }
 
+    /**
+     * 上传失败交易信息
+     * @param context
+     */
     private void uploadOrder(final Context context) {
         Map<Long, String> orders = OrderDb.find();
         if (orders != null && !orders.isEmpty()) {
