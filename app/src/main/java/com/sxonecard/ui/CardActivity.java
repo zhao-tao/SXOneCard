@@ -1,7 +1,6 @@
 package com.sxonecard.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -16,20 +15,20 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import com.baidu.mobstat.SendStrategyEnum;
+import com.baidu.mobstat.StatService;
 import com.google.gson.Gson;
-import com.networkbench.agent.impl.NBSAppAgent;
 import com.sxonecard.CardApplication;
 import com.sxonecard.R;
-import com.sxonecard.background.HeartBeatService;
 import com.sxonecard.base.BaseFragment;
 import com.sxonecard.base.RxBus;
 import com.sxonecard.http.HttpDataListener;
 import com.sxonecard.http.HttpDataSubscriber;
 import com.sxonecard.http.HttpRequestProxy;
+import com.sxonecard.http.SerialPort;
 import com.sxonecard.http.bean.AdBean;
 import com.sxonecard.http.bean.AdResult;
 import com.sxonecard.http.bean.SetBean;
-import com.sxonecard.http.SerialPort;
 import com.sxonecard.util.DownLoadFile;
 import com.sxonecard.util.LogcatHelper;
 
@@ -58,15 +57,27 @@ public class CardActivity extends FragmentActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        NBSAppAgent.setLicenseKey("eed4916edbfb4925b37798daf8cc2e09")
-                .withLocationServiceEnabled(true)
-                .start(getApplicationContext());
+
+        //  百度统计接入
+        // 获取测试设备ID
+//        String testDeviceId = StatService.getTestDeviceId(this);
+//        android.util.Log.d("BaiduMobStat", "Test DeviceId : " + testDeviceId);
+        // 日志输出
+        StatService.setDebugOn(true);
+        StatService.setSendLogStrategy(this, SendStrategyEnum.APP_START, 1, false);
+
+//        听云统计接入
+//        NBSAppAgent.setLicenseKey("eed4916edbfb4925b37798daf8cc2e09")
+//                .withLocationServiceEnabled(true)
+//                .start(getApplicationContext());
+
+
         setContentView(R.layout.activity_card);
         ButterKnife.bind(this);
         initView();
-        registerBus();
         //初始化设备
         initDevice();
+        registerBus();
         //请求默认广告
         defaultads();
         LogcatHelper.getInstance().start();
@@ -93,8 +104,8 @@ public class CardActivity extends FragmentActivity {
                 syncTimeAndShutDownDevice();
                 if (!android_update(set)) {
                     //开启心跳服务
-                    Intent intent = new Intent(getApplicationContext(), HeartBeatService.class);
-                    startService(intent);
+//                    Intent intent = new Intent(getApplicationContext(), HeartBeatService.class);
+//                    startService(intent);
                 }
             }
 

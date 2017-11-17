@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -144,14 +145,18 @@ public class HeartBeatBroadcastReceiver extends BroadcastReceiver {
         }
         //请求更新广告
         updateAds(context);
-        //更新计数
+        //fixme 更新计数?
         CardApplication.getInstance().incTimeCount();
         Intent i = new Intent(context, HeartBeatService.class);
         context.startService(i);
     }
 
+    /**
+     * 判断是否需要获取广告
+     * @return
+     */
     private boolean isSendAds() {
-        if (null == nextTime || "".equals(nextTime)) {
+        if (TextUtils.isEmpty(nextTime)) {
             return true;
         }
         long next_time = getDateTime(nextTime);
@@ -159,6 +164,11 @@ public class HeartBeatBroadcastReceiver extends BroadcastReceiver {
         return curr_time > next_time;
     }
 
+    /**
+     * 获取日期的精确时间
+     * @param time
+     * @return
+     */
     private long getDateTime(String time) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -178,6 +188,7 @@ public class HeartBeatBroadcastReceiver extends BroadcastReceiver {
         if (ads == null) {
             return 0;
         }
+        // FIXME: 2017/11/16 index变量的作用？
         AdBean bean = ads.get(index);
         long start_time_long = getDateTime(bean.getStarttime());
         long end_time_long = getDateTime(bean.getEndtime());

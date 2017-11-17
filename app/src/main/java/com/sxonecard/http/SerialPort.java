@@ -73,15 +73,16 @@ public class SerialPort {
         return false;
     }
 
-    public void autoRun(){
+    public void autoRun() {
         byte[] buff = new byte[11];
         ByteUtil.hexStringToBytes("43,56,65,ff,ff,04,00,0b,00,2f,be", buff, 0);
         boolean result = sendBuffer(buff);
-        Log.d(TAG,result?"发送自动测试命令成功":"发送自动测试命令失败");
+        Log.d(TAG, result ? "发送自动测试命令成功" : "发送自动测试命令失败");
 //        int crc_value = Crc16.getChk(buff, index);
 //        buff[index++] = ByteUtil.byte_toL(crc_value);
 //        buff[index++] = ByteUtil.byte_toH(crc_value);
     }
+
     /**
      * 关闭串口
      */
@@ -95,12 +96,13 @@ public class SerialPort {
         }
     }
 
-    private void onConnection(byte[] srcBuffer, int size){
-        String temp = ByteUtil.bytesToAscii(srcBuffer,12,12);
+    private void onConnection(byte[] srcBuffer, int size) {
+        String temp = ByteUtil.bytesToAscii(srcBuffer, 12, 12);
         CardApplication.IMEI = temp;
         byte[] moduleCheckByte = moduleCheck();
         sendBuffer(moduleCheckByte);
     }
+
     private void onDataReceive(byte[] srcBuffer, int size) {
         try {
             int flag = srcBuffer[7] & 0xFF;
@@ -109,7 +111,7 @@ public class SerialPort {
                 case 1:
                     //测试链接.
                     Log.d(TAG, "链接成功");
-                    onConnection(srcBuffer,size);
+                    onConnection(srcBuffer, size);
 //                    byte[] moduleCheckByte = moduleCheck();
 //                    sendBuffer(moduleCheckByte);
                     break;
@@ -282,7 +284,7 @@ public class SerialPort {
         try {
             String byteString = ByteUtil.bytesToHexString(destBuff);
             int status = destBuff[10] & 0x0FF;
-            Log.d(TAG,status==0?"充值成功":"充值失败");
+            Log.d(TAG, status == 0 ? "充值成功" : "充值失败");
             if (status == 0) {
                 String balance = byteString.substring(11 * 2, 15 * 2);
                 String cardNumber = byteString.substring(19 * 2, 23 * 2);
@@ -311,7 +313,7 @@ public class SerialPort {
 
     public boolean sendRechargeCmd(int money) {
         boolean result = sendBuffer(rechargeCmd(money));
-        Log.d(TAG,result?"发送充值命令成功":"发送充值命令失败");
+        Log.d(TAG, result ? "发送充值命令成功" : "发送充值命令失败");
         return result;
     }
 
@@ -335,6 +337,7 @@ public class SerialPort {
 
     private class ReadThread extends Thread {
         private byte[] buffer = new byte[512];
+
         public ReadThread(String name) {
             super(name);
         }
@@ -348,7 +351,7 @@ public class SerialPort {
                     if (mInputStream == null) {
                         return;
                     }
-                    Arrays.fill(buffer,(byte)0);
+                    Arrays.fill(buffer, (byte) 0);
 //                    byte[] buffer = new byte[512];
                     //读取包头
                     size = mInputStream.read(buffer, 0, 11);
@@ -362,7 +365,7 @@ public class SerialPort {
                             //提取长度
                             int data_length = ((buffer[9] << 8 | buffer[8]) & 0x0FFFF) + 1;
                             int total = size + data_length;
-                            Log.d(TAG, "length="+String.valueOf(data_length));
+                            Log.d(TAG, "length=" + String.valueOf(data_length));
                             //追加数据
                             size += mInputStream.read(buffer, size, data_length);
                             //只有接收到正确数据才解析
