@@ -120,23 +120,23 @@ public class FragmentOne extends BaseFragment {
                     return;
 
                 if (checkCardBean.getType().equalsIgnoreCase("0105")) {
-                    Log.d("checkCard", "爱心卡");
+                    Log.i("checkCard", "爱心卡");
                     handler.sendEmptyMessage(3);
                     return;
                 }
                 if (checkCardBean.getType().equalsIgnoreCase("0102")) {
-                    Log.d("checkCard", "老年卡");
+                    Log.i("checkCard", "老年卡");
                     handler.sendEmptyMessage(4);
                     return;
                 }
                 //卡过期
                 if (isExpired(checkCardBean.getExpireDate())) {
-                    Log.d("checkCard", "卡过期");
+                    Log.i("checkCard", "卡过期");
                     handler.sendEmptyMessage(2);
                     return;
                 }
                 if (checkCardBean.getStatus().equalsIgnoreCase("01")) {
-                    Log.d("checkCard", "正常卡");
+                    Log.i("checkCard", "正常卡");
                     CardApplication.getInstance().setCheckCard(checkCardBean);
                     Message msg = new Message();
                     msg.what = 1;
@@ -146,7 +146,7 @@ public class FragmentOne extends BaseFragment {
                     navHandle.sendMessage(msg);
 
                 } else {
-                    Log.d("checkCard", "无效卡");
+                    Log.i("checkCard", "无效卡");
                     handler.sendEmptyMessage(2);
                 }
 

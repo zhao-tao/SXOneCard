@@ -20,6 +20,9 @@ import butterknife.ButterKnife;
 
 /**
  * Created by HeQiang on 2017/6/10.
+ * 充值失败：（有等待延迟）
+ * 1 充值失败
+ * 2 二维码过期
  */
 
 public class ReChangeError extends BaseFragment {
@@ -58,7 +61,7 @@ public class ReChangeError extends BaseFragment {
             @Override
             public void onFinish()
             {
-                Log.d("reChangeError","redirect first page");
+                Log.i("reChangeError","redirect first page");
                 navHandle.sendEmptyMessage(0);
             }
         };

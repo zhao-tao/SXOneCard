@@ -12,6 +12,7 @@ import butterknife.Bind;
 
 /**
  * Created by pc on 2017-06-20.
+ * 设备维护
  */
 
 public class DeviceException extends BaseFragment

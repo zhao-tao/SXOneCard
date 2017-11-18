@@ -20,6 +20,9 @@ import java.util.List;
 
 import butterknife.Bind;
 
+/**
+ * 选择充值金额
+ */
 public class FragmentThree extends BaseFragment {
 
     @Bind(R.id.price_grid)

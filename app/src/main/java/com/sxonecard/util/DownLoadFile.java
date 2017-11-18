@@ -93,7 +93,7 @@ public class DownLoadFile {
                     e.printStackTrace();
                 } finally {
                     if(downfalg){
-                        Log.d("UPDATE","安装更新");
+                        Log.i("UPDATE","安装更新");
                         down();
                     }
                 }

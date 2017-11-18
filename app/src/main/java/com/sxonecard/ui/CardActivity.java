@@ -61,7 +61,7 @@ public class CardActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         // 百度统计获取测试设备ID
 //        String testDeviceId = StatService.getTestDeviceId(this);
-//        android.util.Log.d("BaiduMobStat", "Test DeviceId : " + testDeviceId);
+//        android.util.Log.i("BaiduMobStat", "Test DeviceId : " + testDeviceId);
         // 百度统计日志输出
         StatService.setDebugOn(true);
         StatService.setSendLogStrategy(this, SendStrategyEnum.APP_START, 1, false);
@@ -78,7 +78,7 @@ public class CardActivity extends FragmentActivity {
         initDevice();
 //        defaultads();
         // FIXME: 2017/11/17
-//        LogcatHelper.getInstance().start();
+        LogcatHelper.getInstance().start();
     }
 
     /**
@@ -226,7 +226,7 @@ public class CardActivity extends FragmentActivity {
 
             @Override
             public void onError(Context context, int code, String msg) {
-                Log.d(TAG, "网络错误代码:" + code);
+                Log.i(TAG, "网络错误代码:" + code);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

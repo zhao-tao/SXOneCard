@@ -40,6 +40,7 @@ public class HeartBeatBroadcastReceiver extends BroadcastReceiver {
         int period = 1800;
         if (CardApplication.getInstance().getConfig() != null)
             period = CardApplication.getInstance().getConfig().getRunRate();
+//        upload(context);
         //未到时间
         if (currentCount % period != 0)
             return;
@@ -76,38 +77,38 @@ public class HeartBeatBroadcastReceiver extends BroadcastReceiver {
             byte[] buff = new byte[1024];
             File[] files = dir.listFiles();
             for (File file : files) {
-                if (!file.isDirectory() && file.getName().endsWith(".log")) {
+                if (!file.isDirectory() ) {
                     try {
-                        FileInputStream inputStream = new FileInputStream(file);
-                        int length;
-                        String msg = file.getName().substring(0, file.getName().indexOf(".")) + "\n";
-                        while ((length = inputStream.read(buff)) != -1) {
-                            msg += new String(buff, 0, length);
-                        }
-                        inputStream.close();
-                        HttpDataListener listener = new HttpDataListener<String>() {
-                            @Override
-                            public void onNext(String o) {
-                            }
-
-                            @Override
-                            public void onError(Context context, int code, String msg) {
-                                super.onError(context, code, msg);
-                            }
-                        };
-                        Map<String, String> param = new HashMap<>(4);
-                        param.put("error", "error");
-                        param.put("des", msg);
-                        param.put("imeiid", CardApplication.IMEI);
-                        param.put("version", "" + PackageUtil.getVersion(context));
-                        HttpRequestProxy.getInstance().uploadLog(new HttpDataSubscriber(listener,
-                                context, false), param);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+//                        FileInputStream inputStream = new FileInputStream(file);
+//                        int length;
+//                        String msg = file.getName().substring(0, file.getName().indexOf(".")) + "\n";
+//                        while ((length = inputStream.read(buff)) != -1) {
+//                            msg += new String(buff, 0, length);
+//                        }
+//                        inputStream.close();
+//                        HttpDataListener listener = new HttpDataListener<String>() {
+//                            @Override
+//                            public void onNext(String o) {
+//                            }
+//
+//                            @Override
+//                            public void onError(Context context, int code, String msg) {
+//                                super.onError(context, code, msg);
+//                            }
+//                        };
+//                        Map<String, String> param = new HashMap<>(4);
+//                        param.put("error", "error");
+//                        param.put("des", msg);
+//                        param.put("imeiid", CardApplication.IMEI);
+//                        param.put("version", "" + PackageUtil.getVersion(context));
+//                        HttpRequestProxy.getInstance().uploadLog(new HttpDataSubscriber(listener,
+//                                context, false), param);
+//                    } catch (FileNotFoundException e) {
+//                        e.printStackTrace();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
                     } finally {
-//                        file.delete();
+                        file.delete();
                     }
                 }
             }

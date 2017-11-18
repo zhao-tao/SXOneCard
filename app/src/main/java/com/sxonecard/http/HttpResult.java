@@ -2,6 +2,7 @@ package com.sxonecard.http;
 
 /**
  * Created by liukun on 16/3/5.
+ *
  */
 public class HttpResult<T> {
 

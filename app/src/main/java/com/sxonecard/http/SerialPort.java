@@ -78,7 +78,7 @@ public class SerialPort {
         byte[] buff = new byte[11];
         ByteUtil.hexStringToBytes("43,56,65,ff,ff,04,00,0b,00,2f,be", buff, 0);
         boolean result = sendBuffer(buff);
-        Log.d(TAG, result ? "发送自动测试命令成功" : "发送自动测试命令失败");
+        Log.i(TAG, result ? "发送自动测试命令成功" : "发送自动测试命令失败");
 //        int crc_value = Crc16.getChk(buff, index);
 //        buff[index++] = ByteUtil.byte_toL(crc_value);
 //        buff[index++] = ByteUtil.byte_toH(crc_value);
@@ -107,11 +107,11 @@ public class SerialPort {
     private void onDataReceive(byte[] srcBuffer, int size) {
         try {
             int flag = srcBuffer[7] & 0xFF;
-            Log.d(TAG, "Command " + flag);
+            Log.i(TAG, "Command " + flag);
             switch (flag) {
                 case 1:
                     //测试链接.
-                    Log.d(TAG, "链接成功");
+                    Log.i(TAG, "链接成功");
                     onConnection(srcBuffer, size);
 //                    byte[] moduleCheckByte = moduleCheck();
 //                    sendBuffer(moduleCheckByte);
@@ -119,7 +119,6 @@ public class SerialPort {
                 case 2:
                     //刷卡设备各功能模块检测.
                     onCheckModule(srcBuffer);
-                    Log.d(TAG, "模块检测成功");
                     break;
                 case 3:
                     //接收感应区卡片返回信息
@@ -135,7 +134,7 @@ public class SerialPort {
                     break;
                 case 6:
                     //时间同步.
-                    Log.d(TAG, "时间同步");
+                    Log.i(TAG, "时间同步");
                     break;
                 case 7:
                     //检测到卡拿走
@@ -159,7 +158,7 @@ public class SerialPort {
     }
 
     public void checkDevice() {
-        Log.d(TAG, "检查设备中");
+        Log.i(TAG, "检查设备中");
         sendBuffer(testConnections());
         //5秒后检查设备标志
         new Handler().postDelayed(new Runnable() {
@@ -200,7 +199,7 @@ public class SerialPort {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.d(TAG, DateTools.getCurrent());
+        Log.i(TAG, DateTools.getCurrent());
 
         int crc_value = Crc16.getChk(buff, index);
         buff[index++] = ByteUtil.byte_toL(crc_value);
@@ -234,9 +233,9 @@ public class SerialPort {
 
     private void parseShutDownCmd(byte[] destBuff) {
         if (205 == Integer.valueOf(destBuff[10])) {
-            Log.d(TAG, "syncShutDownCmd success." + destBuff[10]);
+            Log.i(TAG, "syncShutDownCmd success." + destBuff[10]);
         } else {
-            Log.d(TAG, "syncShutDownCmd error." + destBuff[10]);
+            Log.i(TAG, "syncShutDownCmd error." + destBuff[10]);
         }
     }
 
@@ -246,8 +245,10 @@ public class SerialPort {
             //各模块正常.
             status = "1";
             CardApplication.getInstance().setDevice(true);
+            Log.i(TAG, "模块检测成功");
         } else {
             status = "0";
+            Log.i(TAG, "模块检测失败");
         }
         RxBus.get().post("checkDevice", status);
     }
@@ -285,7 +286,7 @@ public class SerialPort {
         try {
             String byteString = ByteUtil.bytesToHexString(destBuff);
             int status = destBuff[10] & 0x0FF;
-            Log.d(TAG, status == 0 ? "充值成功" : "充值失败");
+            Log.i(TAG, status == 0 ? "充值成功" : "充值失败");
             if (status == 0) {
                 String balance = byteString.substring(11 * 2, 15 * 2);
                 String cardNumber = byteString.substring(19 * 2, 23 * 2);
@@ -314,7 +315,7 @@ public class SerialPort {
 
     public boolean sendRechargeCmd(int money) {
         boolean result = sendBuffer(rechargeCmd(money));
-        Log.d(TAG, result ? "发送充值命令成功" : "发送充值命令失败");
+        Log.i(TAG, result ? "发送充值命令成功" : "发送充值命令失败");
         return result;
     }
 
@@ -354,24 +355,24 @@ public class SerialPort {
                     }
                     Arrays.fill(buffer, (byte) 0);
 //                    byte[] buffer = new byte[512];
-                    //读取包头
+                    //TODO 读取包头开始（串口状态监听）
                     size = mInputStream.read(buffer, 0, 11);
                     if (size == 11) {
                         //判断是否数据开头，不是丢掉该桢数据
                         if (!ByteUtil.bytesToHexString(buffer, 5, false).equalsIgnoreCase("435665FFFF")) {
                             Thread.sleep(300);
                             mInputStream.read(buffer);
-                            Log.d(TAG, "读取数据错误");
+                            Log.i(TAG, "读取数据错误");
                         } else {
                             //提取长度
                             int data_length = ((buffer[9] << 8 | buffer[8]) & 0x0FFFF) + 1;
                             int total = size + data_length;
-                            Log.d(TAG, "length=" + String.valueOf(data_length));
+                            Log.i(TAG, "length=" + String.valueOf(data_length));
                             //追加数据
                             size += mInputStream.read(buffer, size, data_length);
                             //只有接收到正确数据才解析
                             if (total == size) {
-                                Log.d(TAG, ByteUtil.bytesToHexString(buffer, total, true));
+                                Log.i(TAG, ByteUtil.bytesToHexString(buffer, total, true));
                                 onDataReceive(buffer, size);
                             }
                         }

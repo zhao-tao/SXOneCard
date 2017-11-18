@@ -30,6 +30,7 @@ import butterknife.OnClick;
 
 /**
  * Created by pc on 2017-04-25.
+ * 选择支付方式（微信，支付宝）
  */
 
 public class FragmentFive extends BaseFragment {
@@ -39,6 +40,8 @@ public class FragmentFive extends BaseFragment {
     ImageView weixinPay;
     @Bind(R.id.zhifubaoPay)
     ImageView zhifubaoPay;
+    @Bind(R.id.tv_back)
+    TextView mBackTv;
 
     private String rechagePrice;
     private String imeiId = CardApplication.IMEI;
@@ -57,16 +60,23 @@ public class FragmentFive extends BaseFragment {
         userRechangeMoney.setText("用户充值金额:" + rechagePrice + "元");
         progressDialog = new ProgressDialog(getContext());
 
-        if(BuildConfig.AUTO_TEST){
+        if (BuildConfig.AUTO_TEST) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if(weixinPay == null)
+                    if (weixinPay == null)
                         return;
                     weixinPay.performClick();
                 }
-            },5000);
+            }, 5000);
         }
+        mBackTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                返回选择金额
+                navHandle.sendEmptyMessage(2);
+            }
+        });
     }
 
     @Override
@@ -76,7 +86,7 @@ public class FragmentFive extends BaseFragment {
 
     @OnClick({R.id.weixinPay, R.id.zhifubaoPay})
     public void onViewClicked(View view) {
-       // Message msg = null;
+        // Message msg = null;
         switch (view.getId()) {
             case R.id.weixinPay:
                 sendWeixinData();
@@ -97,7 +107,7 @@ public class FragmentFive extends BaseFragment {
             @Override
             public void onNext(AlipayBean alipayBean) {
                 progressDialog.dismiss();
-                if(TextUtils.isEmpty(alipayBean.getQrCodeString())) {
+                if (TextUtils.isEmpty(alipayBean.getQrCodeString())) {
                     weixinPay.setEnabled(true);
                     zhifubaoPay.setEnabled(true);
                     return;
@@ -150,7 +160,7 @@ public class FragmentFive extends BaseFragment {
             @Override
             public void onNext(AlipayBean alipayBean) {
                 progressDialog.dismiss();
-                if(TextUtils.isEmpty(alipayBean.getQrCodeString())) {
+                if (TextUtils.isEmpty(alipayBean.getQrCodeString())) {
                     weixinPay.setEnabled(true);
                     zhifubaoPay.setEnabled(true);
                     return;

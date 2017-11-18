@@ -69,7 +69,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             dir.mkdir();
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-        String name = format.format(Calendar.getInstance(Locale.CHINA).getTime())+".error";
+        String name = format.format(Calendar.getInstance(Locale.CHINA).getTime())+".log";
         File file  = new File(dir.getAbsolutePath()+File.separator+name);
         try {
             if(!file.exists())

@@ -1,9 +1,8 @@
 package com.sxonecard;
 
 import android.app.Application;
+import android.media.MediaPlayer;
 
-import com.baidu.mobstat.SendStrategyEnum;
-import com.baidu.mobstat.StatService;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -33,12 +32,13 @@ public class CardApplication extends Application {
     public RechargeCardBean checkCard;
     private String currentOrderId;
     private SetBean config;
-//    public static String IMEI = "710033000101";
     public static String IMEI = "";
 
-//    a_money卡内初始金额，b_money充值金额，a_money+b_money=充值后卡内金额
+    //    a_money卡内初始金额，b_money充值金额，a_money+b_money=充值后卡内金额
     public static double a_money = 0.0;
     public static double b_money = 0.0;
+
+    public static MediaPlayer mediaPlayer = new MediaPlayer();
 
     public static int chong_type = 1;  // 1微信  2支付宝
 

@@ -32,6 +32,8 @@ public class FragmentSeven extends BaseFragment {
     TextView userRechargeMoney;
     @Bind(R.id.print_ticket)
     Button printTicket;
+    @Bind(R.id.tv_back)
+    TextView mBackTv;
     private MyCountDownTimer timer;
 
     @Override
@@ -64,6 +66,12 @@ public class FragmentSeven extends BaseFragment {
             }
         });
         uploadTradeData();
+        mBackTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navHandle.sendEmptyMessage(0);
+            }
+        });
     }
 
     /**
@@ -101,6 +109,7 @@ public class FragmentSeven extends BaseFragment {
         HttpRequestProxy.getInstance().uploadTrade(new HttpDataSubscriber(tradeListener,
                 getContext(), false), jsonObj);
     }
+
     @Override
     public void loadData() {
 

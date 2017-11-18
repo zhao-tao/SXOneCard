@@ -83,7 +83,7 @@ public class SyncSysTime {
             Date date = sdf.parse(time);
             requestPermission();
             boolean isSuc = SystemClock.setCurrentTimeMillis(date.getTime());//需要Root权限
-            Log.d("setTime", isSuc + "");
+            Log.i("setTime", isSuc + "");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -106,7 +106,7 @@ public class SyncSysTime {
 
             if (when / 1000 < Integer.MAX_VALUE) {
                 boolean isSuc = SystemClock.setCurrentTimeMillis(when);//需要Root权限
-                Log.d("setTime", isSuc + "");
+                Log.i("setTime", isSuc + "");
             }
             long now = Calendar.getInstance().getTimeInMillis();
 

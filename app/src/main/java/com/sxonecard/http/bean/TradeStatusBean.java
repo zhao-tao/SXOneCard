@@ -2,6 +2,8 @@ package com.sxonecard.http.bean;
 
 /**
  * Created by Administrator on 2017/4/29 0029.
+ * 支付状态
+ * status：0 未成功 1 成功
  */
 
 public class TradeStatusBean

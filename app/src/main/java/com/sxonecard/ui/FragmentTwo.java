@@ -22,6 +22,9 @@ import java.util.List;
 import butterknife.Bind;
 
 
+/**
+ * 选择充值方式
+ */
 public class FragmentTwo extends BaseFragment {
     @Bind(R.id.serviceTypeView)
     GridView serviceTypeView;

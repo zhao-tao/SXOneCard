@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sxonecard.R;
@@ -20,6 +21,7 @@ import butterknife.Bind;
 
 /**
  * Created by pc on 2017-04-25.
+ * 已经不使用
  */
 
 public class FragmentFour extends BaseFragment {
@@ -30,6 +32,8 @@ public class FragmentFour extends BaseFragment {
     EditText inputMoney;
     @Bind(R.id.inputPrice)
     GridView inputPrice;
+    @Bind(R.id.tv_back)
+    TextView mBackTv;
 
     @Override
     public int getLayoutId() {
@@ -63,6 +67,13 @@ public class FragmentFour extends BaseFragment {
             @Override
             protected void convert(ViewHolder viewHolder, String item, int position) {
                 viewHolder.setText(R.id.number, item);
+            }
+        });
+
+        mBackTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navHandle.sendEmptyMessage(2);
             }
         });
 

@@ -78,7 +78,7 @@ public class LogcatHelper {
             /**
              * log level：*:v , *:d , *:w , *:e , *:f , *:s
              * */
-            cmds = "logcat *:e *:i *:d| grep \"(" + mPID + ")\"";
+            cmds = "logcat *:e *:i| grep \"(" + mPID + ")\"";
 
         }
 

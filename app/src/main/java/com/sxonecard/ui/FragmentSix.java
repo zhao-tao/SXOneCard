@@ -29,10 +29,10 @@ import com.sxonecard.http.HttpDataListener;
 import com.sxonecard.http.HttpDataSubscriber;
 import com.sxonecard.http.HttpRequestProxy;
 import com.sxonecard.http.MyCountDownTimer;
+import com.sxonecard.http.SerialPort;
 import com.sxonecard.http.bean.GsonData;
 import com.sxonecard.http.bean.RechargeCardBean;
 import com.sxonecard.http.bean.TradeStatusBean;
-import com.sxonecard.http.SerialPort;
 import com.sxonecard.util.EncryptUtil;
 
 import java.text.DecimalFormat;
@@ -46,6 +46,7 @@ import rx.functions.Action1;
 
 /**
  * Created by pc on 2017-04-25.
+ * 二维码支付
  */
 
 public class FragmentSix extends BaseFragment {
@@ -57,6 +58,8 @@ public class FragmentSix extends BaseFragment {
     LinearLayout scanLayout;
     @Bind(R.id.progress_img)
     ImageView progressImg;
+    @Bind(R.id.tv_back)
+    TextView mBackTv;
 
     private String imeiId;
     private String orderId;
@@ -64,10 +67,12 @@ public class FragmentSix extends BaseFragment {
     private MyCountDownTimer timer;
     private MyCountDownTimer delayTimer;
     private static final int WAIT_TIME = 60;
+    //    倒计时完成后，等待结果返回的时间
     private static final int DELAYED_TIME = 1;
     private int transactionStatus = 0;
     Observable<RechargeCardBean> reChangeCardObservable;
     Observable<String> chargeErrorObservable;
+    private GsonData gsonData;
 
     private static Bitmap addLogo(Bitmap src, Bitmap logo) {
         int srcWidth = src.getWidth();
@@ -98,10 +103,11 @@ public class FragmentSix extends BaseFragment {
 
     @Override
     public void initView() {
+
         setVoice(SoundService.ERWEIMA);
         String msgArrag = this.getArguments().getString("msg").toString();
         Gson gson = new Gson();
-        GsonData gsonData = gson.fromJson(msgArrag, GsonData.class);
+        gsonData = gson.fromJson(msgArrag, GsonData.class);
 
         String qrCodeString = gsonData.getQrCodeString();
         imeiId = gsonData.getImeiId();
@@ -115,9 +121,22 @@ public class FragmentSix extends BaseFragment {
         startTime = System.currentTimeMillis();
         registerListener();
         requestTradeStatus();
+        Log.i("订单支付成功后订单轮询...", DateUtil.getCurrentDateTime());
+
+        mBackTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                返回到支付方式选择
+
+                Message message = new Message();
+                message.obj = gsonData.getRechangeFee();
+                message.what = 4;
+                navHandle.sendMessage(message);
+            }
+        });
     }
 
-    private void registerListener(){
+    private void registerListener() {
         reChangeCardObservable = RxBus.get().register("reChangeCard", RechargeCardBean.class);
         reChangeCardObservable.subscribe(new Action1<RechargeCardBean>() {
             @Override
@@ -125,7 +144,7 @@ public class FragmentSix extends BaseFragment {
 //                uploadTradeData();
                 double money = cardBean.getAmount() * 1.0 / 100;
                 DecimalFormat df = new DecimalFormat("######0.00");
-                Message msgCode = navHandle.obtainMessage(6,df.format(money));
+                Message msgCode = navHandle.obtainMessage(6, df.format(money));
                 msgCode.sendToTarget();
             }
         });
@@ -185,14 +204,17 @@ public class FragmentSix extends BaseFragment {
         RxBus.get().unregister("chargeError", chargeErrorObservable);
     }
 
+    /**
+     * 订单轮询
+     */
     private void requestTradeStatus() {
-        Log.i("订单支付成功后订单轮询...", DateUtil.getCurrentDateTime());
+        // FIXME: 2017/11/18 订单支付状态轮询
         HttpDataListener listener = new HttpDataListener<TradeStatusBean>() {
             @Override
             public void onNext(TradeStatusBean tradeStatus) {
                 long endTime = System.currentTimeMillis();
-                if(BuildConfig.AUTO_TEST){
-                    if((endTime - startTime) > 5000){
+                if (BuildConfig.AUTO_TEST) {
+                    if ((endTime - startTime) > 5000) {
                         tradeStatus.setStatus(1);
                     }
                 }
@@ -209,7 +231,7 @@ public class FragmentSix extends BaseFragment {
             public void onError(Context context, int code, String msg) {
                 super.onError(context, code, msg);
                 cancelTimer();
-                Log.d("FragmentSix", "code:" + code + ",msg:" + msg);
+                Log.i("FragmentSix", "code:" + code + ",msg:" + msg);
                 Message scan = navHandle.obtainMessage(400, getText(R.string.chargeExpired));
                 scan.sendToTarget();
             }
@@ -267,7 +289,7 @@ public class FragmentSix extends BaseFragment {
         return null;
     }
 
-    private void cancelTimer(){
+    private void cancelTimer() {
         if (null != timer)
             timer.cancel();
         if (null != delayTimer)
