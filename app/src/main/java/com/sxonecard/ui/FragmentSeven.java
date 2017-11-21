@@ -25,6 +25,7 @@ import butterknife.Bind;
 
 /**
  * Created by pc on 2017-04-27.
+ * 充值成功，打印小票，上传交易数据，超时返回首页
  */
 
 public class FragmentSeven extends BaseFragment {

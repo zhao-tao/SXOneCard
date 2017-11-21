@@ -40,6 +40,10 @@ public abstract class BaseFragment extends Fragment {
     protected boolean isVisibleToUser;
     protected Handler navHandle;
 
+    /**
+     * 给每个Fragment传递Activity的Handler用来切换页面changeAction
+     * @param handle
+     */
     public void setNavHandle(Handler handle) {
         this.navHandle = handle;
     }

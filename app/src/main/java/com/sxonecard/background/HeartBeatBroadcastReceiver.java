@@ -16,12 +16,8 @@ import com.sxonecard.http.HttpDataSubscriber;
 import com.sxonecard.http.HttpRequestProxy;
 import com.sxonecard.http.bean.AdBean;
 import com.sxonecard.http.bean.AdResult;
-import com.sxonecard.util.PackageUtil;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,6 +31,33 @@ public class HeartBeatBroadcastReceiver extends BroadcastReceiver {
     List<AdBean> adlist = CardApplication.adlist;
     int index = CardApplication.index;
 
+    @Override
+    public void onReceive(final Context context, Intent intent) {
+        heartBeat(context);
+        uploadOrder(context);
+        //切换广告
+        if (null != adlist) {
+            int flag = intime(adlist);
+            if (0 == flag || 1 == flag || 3 == flag || 5 == flag) { // 时间没到, 播放默认广告
+                RxBus.get().post("ads", "default");
+            } else if (2 == flag || 4 == flag) { // 播放本次广告
+                AdBean ad = adlist.get(index);
+                Gson gson = new Gson();
+                RxBus.get().post("ads", gson.toJson(ad));
+            }
+        }
+        //TODO 请求更新广告
+        updateAds(context);
+        CardApplication.getInstance().incTimeCount();
+        Intent i = new Intent(context, HeartBeatService.class);
+        context.startService(i);
+    }
+
+    /**
+     * 向服务器定时提交状态
+     *
+     * @param context
+     */
     private void heartBeat(final Context context) {
         int currentCount = CardApplication.getInstance().getTimeCount();
         int period = 1800;
@@ -67,7 +90,71 @@ public class HeartBeatBroadcastReceiver extends BroadcastReceiver {
     }
 
     /**
-     * 上传log日志
+     * 上传失败交易信息
+     *
+     * @param context
+     */
+    private void uploadOrder(final Context context) {
+        Map<Long, String> orders = OrderDb.find();
+        if (orders != null && !orders.isEmpty()) {
+            for (final Map.Entry<Long, String> entry : orders.entrySet()) {
+                String order = entry.getValue();
+                final long key = entry.getKey();
+                Gson gson = new Gson();
+                Map<String, String> param = gson.fromJson(order, HashMap.class);
+                HttpDataListener tradeListener = new HttpDataListener<String>() {
+                    @Override
+                    public void onNext(String tradeStatusBean) {
+                        OrderDb.delete(key);
+                    }
+
+                    @Override
+                    public void onError(Context context, int code, String msg) {
+                        super.onError(context, code, msg);
+                    }
+                };
+                HttpRequestProxy.getInstance().uploadTrade(new HttpDataSubscriber(tradeListener,
+                        context, false), param);
+
+            }
+        }
+    }
+
+    private void updateAds(final Context context) {
+        if (isSendAds()) {
+            HttpDataListener listener2 = new HttpDataListener<AdResult>() {
+                @Override
+                public void onNext(AdResult result) {
+                    CardApplication.nextTime = result.getNexttime();
+                    if (result.getData() != null && result.getData().size() > 0) {
+                        CardApplication.adlist = result.getData();
+                        CardApplication.index = 0;
+                    }
+                }
+            };
+            HttpRequestProxy.getInstance().getAd(new HttpDataSubscriber(listener2, context
+                    , false), "ads", CardApplication.IMEI);
+        }
+    }
+
+    /**
+     * 判断是否需要获取广告
+     *
+     * @return
+     */
+    private boolean isSendAds() {
+        if (TextUtils.isEmpty(nextTime)) {
+            return true;
+        }
+        long next_time = getDateTime(nextTime);
+        long curr_time = Calendar.getInstance().getTimeInMillis();
+        return curr_time > next_time;
+    }
+
+
+    /**
+     * 上传log日志（暂不启用，因产生的文件过大导致GC）
+     *
      * @param context
      */
     private void upload(Context context) {
@@ -77,7 +164,7 @@ public class HeartBeatBroadcastReceiver extends BroadcastReceiver {
             byte[] buff = new byte[1024];
             File[] files = dir.listFiles();
             for (File file : files) {
-                if (!file.isDirectory() ) {
+                if (!file.isDirectory()) {
                     try {
 //                        FileInputStream inputStream = new FileInputStream(file);
 //                        int length;
@@ -115,61 +202,12 @@ public class HeartBeatBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
-    private void updateAds(final Context context) {
-        if (isSendAds()) {
-            HttpDataListener listener2 = new HttpDataListener<AdResult>() {
-                @Override
-                public void onNext(AdResult result) {
-                    CardApplication.nextTime = result.getNexttime();
-                    if (result.getData() != null && result.getData().size() > 0) {
-                        CardApplication.adlist = result.getData();
-                        CardApplication.index = 0;
-                    }
-                }
-            };
-            HttpRequestProxy.getInstance().getAd(new HttpDataSubscriber(listener2, context
-                    , false), "ads", CardApplication.IMEI);
-        }
-    }
 
-    @Override
-    public void onReceive(final Context context, Intent intent) {
-        heartBeat(context);
-        uploadOrder(context);
-        //切换广告
-        if (null != adlist) {
-            int flag = intime(adlist);
-            if (0 == flag || 1 == flag || 3 == flag || 5 == flag) { // 时间没到, 播放默认广告
-                RxBus.get().post("ads", "default");
-            } else if (2 == flag || 4 == flag) { // 播放本次广告
-                AdBean ad = adlist.get(index);
-                Gson gson = new Gson();
-                RxBus.get().post("ads", gson.toJson(ad));
-            }
-        }
-        //请求更新广告
-        updateAds(context);
-        //fixme 更新计数?
-        CardApplication.getInstance().incTimeCount();
-        Intent i = new Intent(context, HeartBeatService.class);
-        context.startService(i);
-    }
 
-    /**
-     * 判断是否需要获取广告
-     * @return
-     */
-    private boolean isSendAds() {
-        if (TextUtils.isEmpty(nextTime)) {
-            return true;
-        }
-        long next_time = getDateTime(nextTime);
-        long curr_time = Calendar.getInstance().getTimeInMillis();
-        return curr_time > next_time;
-    }
 
     /**
      * 获取日期的精确时间
+     *
      * @param time
      * @return
      */
@@ -224,33 +262,5 @@ public class HeartBeatBroadcastReceiver extends BroadcastReceiver {
 
     }
 
-    /**
-     * 上传失败交易信息
-     * @param context
-     */
-    private void uploadOrder(final Context context) {
-        Map<Long, String> orders = OrderDb.find();
-        if (orders != null && !orders.isEmpty()) {
-            for (final Map.Entry<Long, String> entry : orders.entrySet()) {
-                String order = entry.getValue();
-                final long key = entry.getKey();
-                Gson gson = new Gson();
-                Map<String, String> param = gson.fromJson(order, HashMap.class);
-                HttpDataListener tradeListener = new HttpDataListener<String>() {
-                    @Override
-                    public void onNext(String tradeStatusBean) {
-                        OrderDb.delete(key);
-                    }
 
-                    @Override
-                    public void onError(Context context, int code, String msg) {
-                        super.onError(context, code, msg);
-                    }
-                };
-                HttpRequestProxy.getInstance().uploadTrade(new HttpDataSubscriber(tradeListener,
-                        context, false), param);
-
-            }
-        }
-    }
 }

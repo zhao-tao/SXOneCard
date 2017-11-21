@@ -5,6 +5,7 @@ import com.sxonecard.http.bean.AlipayBean;
 import com.sxonecard.http.bean.SetBean;
 import com.sxonecard.http.bean.ShutDownBean;
 import com.sxonecard.http.bean.TradeStatusBean;
+import com.sxonecard.util.LogInterceptor;
 
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -43,15 +44,21 @@ public class HttpRequestProxy {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        //添加header
-        builder.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request().newBuilder()
-                        .addHeader("User-Agent", "").build();
-                return chain.proceed(request);
-            }
-        }).addInterceptor(logging).connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+        //Log日志中添加header()的("User-Agent", "")信息
+//        builder.addInterceptor(
+//                new Interceptor() {
+//                    @Override
+//                    public Response intercept(Chain chain) throws IOException {
+//                        Request request = chain.request().newBuilder()
+//                                .addHeader("User-Agent", "").build();
+//                        return chain.proceed(request);
+//                    }
+//                }
+//        ).addInterceptor(logging).connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+//                .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+//                .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+
+        builder.addInterceptor(new LogInterceptor()).connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
 

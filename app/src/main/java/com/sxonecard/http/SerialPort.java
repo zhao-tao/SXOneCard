@@ -99,6 +99,7 @@ public class SerialPort {
 
     private void onConnection(byte[] srcBuffer, int size) {
         String temp = ByteUtil.bytesToAscii(srcBuffer, 12, 12);
+        // TODO: 2017/11/21 给IMEI赋值
         CardApplication.IMEI = temp;
         byte[] moduleCheckByte = moduleCheck();
         sendBuffer(moduleCheckByte);
@@ -107,14 +108,12 @@ public class SerialPort {
     private void onDataReceive(byte[] srcBuffer, int size) {
         try {
             int flag = srcBuffer[7] & 0xFF;
-            Log.i(TAG, "Command " + flag);
+            Log.i(TAG, "onDataReceive Command " + flag);
             switch (flag) {
                 case 1:
                     //测试链接.
-                    Log.i(TAG, "链接成功");
+                    Log.i(TAG, "onDataReceive 链接成功");
                     onConnection(srcBuffer, size);
-//                    byte[] moduleCheckByte = moduleCheck();
-//                    sendBuffer(moduleCheckByte);
                     break;
                 case 2:
                     //刷卡设备各功能模块检测.
@@ -355,14 +354,14 @@ public class SerialPort {
                     }
                     Arrays.fill(buffer, (byte) 0);
 //                    byte[] buffer = new byte[512];
-                    //TODO 读取包头开始（串口状态监听）
+                    //TODO 收到串口状态，读取包头开始（串口状态监听）
                     size = mInputStream.read(buffer, 0, 11);
                     if (size == 11) {
                         //判断是否数据开头，不是丢掉该桢数据
                         if (!ByteUtil.bytesToHexString(buffer, 5, false).equalsIgnoreCase("435665FFFF")) {
                             Thread.sleep(300);
                             mInputStream.read(buffer);
-                            Log.i(TAG, "读取数据错误");
+                            Log.i(TAG, "1 读取数据错误");
                         } else {
                             //提取长度
                             int data_length = ((buffer[9] << 8 | buffer[8]) & 0x0FFFF) + 1;
@@ -372,10 +371,12 @@ public class SerialPort {
                             size += mInputStream.read(buffer, size, data_length);
                             //只有接收到正确数据才解析
                             if (total == size) {
-                                Log.i(TAG, ByteUtil.bytesToHexString(buffer, total, true));
+                                Log.i(TAG, "2 " + ByteUtil.bytesToHexString(buffer, total, true));
                                 onDataReceive(buffer, size);
                             }
                         }
+                    } else {
+                        Log.i(TAG, "1 error_data= " + ByteUtil.bytesToHexString(buffer, 5, false));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

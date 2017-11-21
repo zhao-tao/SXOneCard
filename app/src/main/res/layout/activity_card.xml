@@ -5,15 +5,32 @@
     android:orientation="vertical">
 
     <FrameLayout
-        android:id="@+id/fragment_gg"
+        android:id="@+id/fragment_ad"
         android:layout_width="match_parent"
-        android:layout_height="1228dp">
+        android:layout_height="0dp"
+        android:layout_weight="2"></FrameLayout>
 
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/fragment_action"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="692dp"
-        android:background="@color/background" />
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <FrameLayout
+            android:id="@+id/fragment_action"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background" />
+
+        <!--用来测试时候打印相关的信息
+        包含：IMID，卡号，串口实时返回的状态
+        -->
+        <TextView
+            android:id="@+id/tv_test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:text="测试数据" />
+    </RelativeLayout>
+
+
 </LinearLayout>

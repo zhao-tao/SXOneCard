@@ -50,7 +50,6 @@ public class DateUtil
             return (cal2.getTimeInMillis() - cal1.getTimeInMillis())
                     / (1000 * 60 * 60);
         } catch (ParseException e) {
-            // TODO Auto-generated catch block
             throw new RuntimeException(e);
         }
     }
@@ -317,7 +316,6 @@ public class DateUtil
             date2 = formatter.parse(endDate);
             return (int) ((date2.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24));
         } catch (ParseException e) {
-            // TODO Auto-generated catch block
             throw new RuntimeException(e);
         }
 
@@ -336,7 +334,6 @@ public class DateUtil
             return (cal2.getTimeInMillis() - cal1.getTimeInMillis())
                     / (1000 * 60 * 60 * 24);
         } catch (ParseException e) {
-            // TODO Auto-generated catch block
             throw new RuntimeException(e);
         }
     }
@@ -364,7 +361,6 @@ public class DateUtil
             return Double.parseDouble(df.format((cal2.getTimeInMillis() - cal1
                     .getTimeInMillis()) / (1000 * 60 * 60.0)));
         } catch (ParseException e) {
-            // TODO Auto-generated catch block
             throw new RuntimeException(e);
         }
     }
@@ -408,7 +404,6 @@ public class DateUtil
             cal2.setTime(date2);
             return (cal2.getTimeInMillis() - cal1.getTimeInMillis());
         } catch (ParseException e) {
-            // TODO Auto-generated catch block
             throw new RuntimeException(e);
         }
     }

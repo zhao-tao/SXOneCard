@@ -76,8 +76,7 @@ public class CardActivity extends FragmentActivity {
         initView();
         registerBus();
         initDevice();
-//        defaultads();
-        // FIXME: 2017/11/17
+        // FIXME: 2017/11/17 本地记录特定的Log日志文件
         LogcatHelper.getInstance().start();
     }
 
@@ -197,7 +196,7 @@ public class CardActivity extends FragmentActivity {
         Bundle bundle = new Bundle();
         bundle.putString("msg", json);
         fragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.fragment_gg, fragment);
+        fragmentTransaction.replace(R.id.fragment_ad, fragment);
 //        fragmentTransaction.commit();
         fragmentTransaction.commitAllowingStateLoss();
     }

@@ -126,8 +126,7 @@ public class FragmentSix extends BaseFragment {
         mBackTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                返回到支付方式选择
-
+//                返回到支付方式选择（必须带入已选择的充值金额）
                 Message message = new Message();
                 message.obj = gsonData.getRechangeFee();
                 message.what = 4;

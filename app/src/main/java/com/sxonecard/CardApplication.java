@@ -26,12 +26,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CardApplication extends Application {
 
-    public static String nextTime;
     public static List<AdBean> adlist = null;
+    public static String nextTime;
     public static int index = 0;
+//    公交卡信息
     public RechargeCardBean checkCard;
+//    当前订单id
     private String currentOrderId;
+//    首次请求获取的配置
     private SetBean config;
+//    IMEI在接收到串口信息，并连接成功后，从串口获取赋值
     public static String IMEI = "";
 
     //    a_money卡内初始金额，b_money充值金额，a_money+b_money=充值后卡内金额

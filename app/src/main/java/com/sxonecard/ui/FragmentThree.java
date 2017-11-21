@@ -9,12 +9,15 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.sxonecard.BuildConfig;
+import com.sxonecard.CardApplication;
 import com.sxonecard.R;
 import com.sxonecard.background.SoundService;
 import com.sxonecard.base.BaseFragment;
+import com.sxonecard.http.bean.RechargeCardBean;
 import com.zhy.adapter.abslistview.CommonAdapter;
 import com.zhy.adapter.abslistview.ViewHolder;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +78,14 @@ public class FragmentThree extends BaseFragment {
         mBackTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navHandle.sendEmptyMessage(1);
+//                返回时需携带余额值
+                RechargeCardBean checkCard = CardApplication.getInstance().getCheckCard();
+                Message msg = new Message();
+                msg.what = 1;
+                double balance = checkCard.getAmount() * 1.0 / 100;
+                DecimalFormat df = new DecimalFormat("######0.00");
+                msg.obj = df.format(balance);
+                navHandle.sendMessage(msg);
             }
         });
 

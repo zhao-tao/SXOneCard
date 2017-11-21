@@ -1,6 +1,5 @@
 package com.sxonecard.ui;
 
-import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,7 +14,6 @@ import com.google.gson.Gson;
 import com.sxonecard.BuildConfig;
 import com.sxonecard.CardApplication;
 import com.sxonecard.R;
-import com.sxonecard.background.SoundService;
 import com.sxonecard.base.BaseFragment;
 import com.sxonecard.base.RxBus;
 import com.sxonecard.http.SerialPort;
@@ -53,6 +51,7 @@ public class FragmentOne extends BaseFragment {
 
     @Override
     public void initView() {
+//        测试按钮，暂未使用
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,20 +68,20 @@ public class FragmentOne extends BaseFragment {
         if (bundle != null) {
             showDialog(R.drawable.tishi5, 1000);
         }
-        if(BuildConfig.AUTO_TEST){
+        if (BuildConfig.AUTO_TEST) {
             Random random = new Random();
             double rnd = random.nextDouble();
             int delay;
 //            if(rnd > 0.97)
 //                delay = 3600;
 //            else
-                delay = 5;
+            delay = 5;
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     SerialPort.getInstance().autoRun();
                 }
-            },delay*1000);
+            }, delay * 1000);
         }
     }
 
@@ -174,6 +173,7 @@ public class FragmentOne extends BaseFragment {
 
     /**
      * 卡片类型提示
+     *
      * @param what
      * @param obj
      */

@@ -5,7 +5,7 @@ package com.sxonecard.http.bean;
  */
 
 public class RechargeCardBean {
-    private String cardNumber;//卡号.
+    private String cardNumber;//卡号（串口获取，需由16进制转换为10进制）
     private int amount;//卡内金额(单位：分)
     private String expireDate; //过期日期
     private String type;    //卡类型

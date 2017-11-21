@@ -31,8 +31,6 @@ public class FragmentTwo extends BaseFragment {
     @Bind(R.id.user_money)
     TextView userMoney;
 
-    //    private int[] icon = {R.drawable.anniu1, R.drawable.anniu2, R.drawable.anniu2};
-//    private String[] name = {"充值", "水电", "购卡"};
     private static List<Integer> services = new ArrayList<>();
 
     static {
@@ -41,8 +39,6 @@ public class FragmentTwo extends BaseFragment {
         services.add(R.drawable.card_normal);
     }
 
-    //    private Integer[] images = {R.drawable.bus_selected,R.drawable.elec_normal,R.drawable.card_normal};
-//    private List<Map<String, String>> dataList = new ArrayList<Map<String, String>>(3);
     @Override
     public int getLayoutId() {
         return R.layout.fragment_2;
