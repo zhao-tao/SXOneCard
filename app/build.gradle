@@ -39,7 +39,7 @@ android {
             signingConfig signingConfigs.release
             buildConfigField "boolean", "AUTO_TEST", "false"
 
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
 
         debug {
@@ -47,7 +47,7 @@ android {
             signingConfig signingConfigs.debug
             debuggable true
             buildConfigField "boolean", "AUTO_TEST", "false"
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
     useLibrary 'org.apache.http.legacy'
