@@ -24,12 +24,12 @@
         <!--用来测试时候打印相关的信息
         包含：IMID，卡号，串口实时返回的状态
         -->
-        <TextView
-            android:id="@+id/tv_test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:text="测试数据" />
+        <!--<TextView-->
+            <!--android:id="@+id/tv_test"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="80dp"-->
+            <!--android:text="测试数据" />-->
     </RelativeLayout>
 
 

@@ -96,7 +96,8 @@ public class FragmentSeven extends BaseFragment {
         jsonObj.put("Type", String.valueOf(1000));
         jsonObj.put("LiushuiId", String.valueOf(System.currentTimeMillis()));
         jsonObj.put("OrderId", CardApplication.getInstance().getCurrentOrderId());
-        jsonObj.put("CardNo", CardApplication.getInstance().getCheckCard().getCardNumber());
+        int i = Integer.parseInt(CardApplication.getInstance().getCheckCard().getCardNumber(), 16);
+        jsonObj.put("CardNo", i + "");
         jsonObj.put("Time", DateTools.getCurrent());
         jsonObj.put("Operator", "tom");
         jsonObj.put("ReaderSn", "111");

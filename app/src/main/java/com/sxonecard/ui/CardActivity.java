@@ -54,7 +54,7 @@ public class CardActivity extends FragmentActivity {
     Observable<String> checkModuleObservable;
     Observable<String> interruptObservable;
     private String curr_ads = "";
-    private int last_action = 0;
+    private int current_fragment = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -145,7 +145,7 @@ public class CardActivity extends FragmentActivity {
         interruptObservable.subscribe(new Action1<String>() {
             @Override
             public void call(String deviceStr) {
-                if (last_action != 0) {
+                if (current_fragment != 0) {
                     Message msg = Message.obtain(navHandler, 0, "提示");
                     msg.sendToTarget();
                 }
@@ -276,12 +276,15 @@ public class CardActivity extends FragmentActivity {
 
     public void changeAction(int index, Object obj) {
         //前后页面相同，不切换
-        if (last_action == index)
+        if (current_fragment == index) {
+            Log.i(TAG, "current_fragment == index" + index);
             return;
+        }
+
         FragmentManager fragmentManager = this.getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         BaseFragment fragment = null;
-        last_action = index;
+        current_fragment = index;
         Log.i(TAG, "changeAction: ===" + index);
         switch (index) {
             case 0:

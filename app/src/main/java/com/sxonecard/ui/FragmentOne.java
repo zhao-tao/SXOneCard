@@ -66,7 +66,7 @@ public class FragmentOne extends BaseFragment {
         Bundle bundle = getArguments();
         dialog = new ErrorDialog(getContext());
         if (bundle != null) {
-            showDialog(R.drawable.tishi5, 1000);
+            showDialog(R.drawable.tishi5, 2000);
         }
         if (BuildConfig.AUTO_TEST) {
             Random random = new Random();
@@ -153,12 +153,19 @@ public class FragmentOne extends BaseFragment {
         });
     }
 
-    private void showDialog(int resId, int delay) {
+    private void showDialog(int resId, final int delay) {
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
         dialog.show();
         dialog.setBackground(resId);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                dialog.dismiss();
+            }
+        }, delay);
     }
 
     private boolean isExpired(String time) {
@@ -177,7 +184,7 @@ public class FragmentOne extends BaseFragment {
      * @param what
      * @param obj
      */
-    private void changeAction(int what, Object obj) {
+    private void changeErrorDialog(int what, Object obj) {
         if (what == 1) {
             showDialog(R.drawable.tishi4, 3000);
         } else if (what == 3) {
@@ -200,7 +207,7 @@ public class FragmentOne extends BaseFragment {
             super.handleMessage(msg);
             FragmentOne fragmentOne = activityWeakReference.get();
             if (fragmentOne != null) {
-                fragmentOne.changeAction(msg.what, msg.obj);
+                fragmentOne.changeErrorDialog(msg.what, msg.obj);
             }
         }
     }
