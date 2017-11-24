@@ -145,7 +145,7 @@ public class FragmentFive extends BaseFragment {
         paramMap.put("Act", act);
         paramMap.put("Time", time);
         paramMap.put("Fee", fee);
-        paramMap.put("CardNo", CardApplication.getInstance().getCheckCard().getCardNumber());
+        paramMap.put("CardNo", CardApplication.getInstance().getCheckCard().getCardNO());
 
         paramMap.put("ImeiId", imeiId);
         paramMap.put("Md5Code", md5Code);
@@ -198,7 +198,7 @@ public class FragmentFive extends BaseFragment {
         paramMap.put("Time", time);
         paramMap.put("Fee", fee);
         paramMap.put("ImeiId", imeiId);
-        paramMap.put("CardNo", CardApplication.getInstance().getCheckCard().getCardNumber());
+        paramMap.put("CardNo", CardApplication.getInstance().getCheckCard().getCardNO());
         paramMap.put("Md5Code", md5Code);
 
         HttpRequestProxy.getInstance().requestAlipayString(new HttpDataSubscriber<AlipayBean>
