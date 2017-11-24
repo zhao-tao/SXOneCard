@@ -97,14 +97,6 @@ public class SerialPort {
         }
     }
 
-    private void onConnection(byte[] srcBuffer, int size) {
-        String temp = ByteUtil.bytesToAscii(srcBuffer, 12, 12);
-        // TODO: 2017/11/21 给IMEI赋值
-        CardApplication.IMEI = temp;
-        byte[] moduleCheckByte = moduleCheck();
-        sendBuffer(moduleCheckByte);
-    }
-
     private void onDataReceive(byte[] srcBuffer, int size) {
         try {
             int flag = srcBuffer[7] & 0xFF;
@@ -145,6 +137,15 @@ public class SerialPort {
         } catch (Exception e) {
 
         }
+    }
+
+    private void onConnection(byte[] srcBuffer, int size) {
+        String temp = ByteUtil.bytesToAscii(srcBuffer, 12, 12);
+        // TODO: 2017/11/21 给IMEI赋值，根据IMid请求默认广告的地址保存到本地，并显示
+        CardApplication.IMEI = temp;
+        RxBus.get().post("ads", "init_default");
+        byte[] moduleCheckByte = moduleCheck();
+        sendBuffer(moduleCheckByte);
     }
 
     private byte[] moduleCheck() {
@@ -214,7 +215,7 @@ public class SerialPort {
     private byte[] shutDownDevice() {
         byte[] buff = new byte[20];
         int index = ByteUtil.hexStringToBytes("43,56,65,FF,FF,05,00,05,08,FA,00", buff, 0);
-        //开机时间.
+        //TODO：开机时间.关机时间设定
         String startTime = CardApplication.getInstance().getConfig().getStartTime();
         index = ByteUtil.date_tobuff(startTime, buff, index);
 
@@ -300,6 +301,7 @@ public class SerialPort {
                 cardBean.setOrderNo(order);
                 RxBus.get().post("reChangeCard", cardBean);
             } else {
+                // TODO: 2017/11/24 充值失败后，数据库记录充值的信息
                 RxBus.get().post("chargeError", String.valueOf(status));
             }
         } catch (Exception e) {

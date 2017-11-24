@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -53,6 +55,7 @@ public class CardActivity extends FragmentActivity {
     Observable<String> adObservable;
     Observable<String> checkModuleObservable;
     Observable<String> interruptObservable;
+    //    当前广告显示
     private String curr_ads = "";
     private int current_fragment = 0;
 
@@ -84,6 +87,7 @@ public class CardActivity extends FragmentActivity {
      * 初始化设备
      */
     private void initDevice() {
+//        设备初始化设备，打开串口接收
         SerialPort device = SerialPort.getInstance();
         device.init();
         //发送测试链接
@@ -137,7 +141,6 @@ public class CardActivity extends FragmentActivity {
                     navHandler.sendEmptyMessage(0);
                     //请求初始化设置
                     initConfiguration();
-                    defaultads();
                 }
             }
         });
@@ -156,10 +159,24 @@ public class CardActivity extends FragmentActivity {
         adObservable.subscribe(new Action1<String>() {
             @Override
             public void call(String ads_json) {
-                if ("default".endsWith(ads_json)) {
+
+//                判断时间未到时，显示默认广告
+                if ("default".equals(ads_json)) {
                     SharedPreferences sharedata = getApplication().getSharedPreferences("sxcard", MODE_PRIVATE);
                     ads_json = sharedata.getString("default_ads", "");
                 }
+
+//                首次进入获取到设备id时，获取并显示默认广告
+                if ("init_default".equals(ads_json)) {
+                    if (isNetworkAvailable(CardActivity.this)) {
+                        defaultads();
+                        return;
+                    } else {
+                        SharedPreferences sharedata = getApplication().getSharedPreferences("sxcard", MODE_PRIVATE);
+                        ads_json = sharedata.getString("default_ads", "");
+                    }
+                }
+
                 try {
                     Gson gson = new Gson();
                     AdBean bean = gson.fromJson(ads_json, AdBean.class);
@@ -173,6 +190,18 @@ public class CardActivity extends FragmentActivity {
                 }
             }
         });
+    }
+
+    public boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivity = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getActiveNetworkInfo();
+            if (info != null && info.isConnected()) {
+                return (info.getState() == NetworkInfo.State.CONNECTED);
+            }
+        }
+        return false;
     }
 
     private void changeAds(boolean type, String json) {
@@ -277,7 +306,6 @@ public class CardActivity extends FragmentActivity {
     public void changeAction(int index, Object obj) {
         //前后页面相同，不切换
         if (current_fragment == index) {
-            Log.i(TAG, "current_fragment == index" + index);
             return;
         }
 

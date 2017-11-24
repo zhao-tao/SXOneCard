@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.sxonecard.BuildConfig;
@@ -135,8 +136,13 @@ public class FragmentOne extends BaseFragment {
                     return;
                 }
                 if (checkCardBean.getStatus().equalsIgnoreCase("01")) {
-                    Log.i("checkCard", "正常卡");
+//                    if(!CardApplication.getInstance().isConnectNetwork()){
+//                        Toast.makeText(context, "网络异常，无法充值", Toast.LENGTH_LONG).show();
+//                        return;
+//                    }
+
                     CardApplication.getInstance().setCheckCard(checkCardBean);
+                    Log.i("checkCard", "正常卡" + checkCardBean.getCardNO());
                     Message msg = new Message();
                     msg.what = 1;
                     double balance = checkCardBean.getAmount() * 1.0 / 100;

@@ -63,7 +63,6 @@ public class HeartBeatBroadcastReceiver extends BroadcastReceiver {
         int period = 1800;
         if (CardApplication.getInstance().getConfig() != null)
             period = CardApplication.getInstance().getConfig().getRunRate();
-//        upload(context);
         //未到时间
         if (currentCount % period != 0)
             return;

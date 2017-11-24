@@ -1,7 +1,11 @@
 package com.sxonecard;
 
 import android.app.Application;
+import android.content.Context;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -10,7 +14,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
-import com.squareup.leakcanary.LeakCanary;
 import com.sxonecard.background.OrderDb;
 import com.sxonecard.base.CrashHandler;
 import com.sxonecard.http.bean.AdBean;
@@ -29,13 +32,13 @@ public class CardApplication extends Application {
     public static List<AdBean> adlist = null;
     public static String nextTime;
     public static int index = 0;
-//    公交卡信息
+    //    公交卡信息
     public RechargeCardBean checkCard;
-//    当前订单id
+    //    当前订单id
     private String currentOrderId;
-//    首次请求获取的配置
+    //    首次请求获取的配置
     private SetBean config;
-//    IMEI在接收到串口信息，并连接成功后，从串口获取赋值
+    //    IMEI在接收到串口信息，并连接成功后，从串口获取赋值
     public static String IMEI = "";
 
     //    a_money卡内初始金额，b_money充值金额，a_money+b_money=充值后卡内金额
@@ -69,7 +72,7 @@ public class CardApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        LeakCanary.install(this);
+//        LeakCanary.install(this);
 
         initImageLoader();
         instance = this;

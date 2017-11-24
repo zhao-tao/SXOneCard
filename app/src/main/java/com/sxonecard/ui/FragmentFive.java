@@ -204,4 +204,10 @@ public class FragmentFive extends BaseFragment {
         HttpRequestProxy.getInstance().requestAlipayString(new HttpDataSubscriber<AlipayBean>
                 (alipayListener, getContext(), false), paramMap);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        progressDialog.dismiss();
+    }
 }

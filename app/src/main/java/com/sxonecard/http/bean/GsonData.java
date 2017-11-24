@@ -2,6 +2,7 @@ package com.sxonecard.http.bean;
 
 /**
  * Created by pc on 2017-04-28.
+ * 生成二维码
  */
 
 public class GsonData

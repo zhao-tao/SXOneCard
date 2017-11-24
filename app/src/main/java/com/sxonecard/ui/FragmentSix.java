@@ -46,7 +46,7 @@ import rx.functions.Action1;
 
 /**
  * Created by pc on 2017-04-25.
- * 二维码支付
+ * 二维码支付，等待支付成功的提示框
  */
 
 public class FragmentSix extends BaseFragment {
@@ -241,7 +241,7 @@ public class FragmentSix extends BaseFragment {
                 imeiId, orderId, md5Code);
     }
 
-    //服务器支付成功，向下位机发送写卡命令
+    //TODO：服务器支付成功，向下位机发送写卡命令
     private void sendSuccTradeData(TradeStatusBean status) {
         //清除定时器
         cancelTimer();

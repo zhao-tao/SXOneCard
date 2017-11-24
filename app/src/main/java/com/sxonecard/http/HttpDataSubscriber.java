@@ -73,7 +73,7 @@ public class HttpDataSubscriber<T> extends Subscriber<T> implements ProgressCanc
             int code = ((HttpDataException) e).getCode();
             httpDataListener.onError(context, code, e.getMessage());
         }else{
-            httpDataListener.onError(context, Constants.NET_ERR, "网络错误");
+//            httpDataListener.onError(context, Constants.NET_ERR, "网络错误");
         }
         dismissProgressDialog();
     }
