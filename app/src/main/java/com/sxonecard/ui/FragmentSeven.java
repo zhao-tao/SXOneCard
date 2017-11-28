@@ -23,6 +23,8 @@ import java.util.Map;
 
 import butterknife.Bind;
 
+import static com.sxonecard.CardApplication.a_money;
+
 /**
  * Created by pc on 2017-04-27.
  * 充值成功，打印小票，上传交易数据，超时返回首页
@@ -36,6 +38,7 @@ public class FragmentSeven extends BaseFragment {
     @Bind(R.id.tv_back)
     TextView mBackTv;
     private MyCountDownTimer timer;
+    private String msg;
 
     @Override
     public int getLayoutId() {
@@ -46,7 +49,7 @@ public class FragmentSeven extends BaseFragment {
     public void initView() {
         //监听返回数据.
         setVoice(SoundService.CHONGZHI_SUCCESS);
-        String msg = getArguments().getString("msg");
+        msg = getArguments().getString("msg");
         userRechargeMoney.setText("卡内当前余额:" + msg + "元");
         timer = new MyCountDownTimer(5 * 1000, 1000) {
             @Override
@@ -107,6 +110,11 @@ public class FragmentSeven extends BaseFragment {
         jsonObj.put("TradeData", "111");
         jsonObj.put("OrderType", "1");
         jsonObj.put("mCardType", CardApplication.getInstance().getCheckCard().getType());
+//        充值前金额
+        jsonObj.put("oldMoney", String.valueOf(a_money));
+//        充值后余额
+        jsonObj.put("newMoney", msg);
+
         HttpRequestProxy.getInstance().uploadTrade(new HttpDataSubscriber(tradeListener,
                 getContext(), false), jsonObj);
     }

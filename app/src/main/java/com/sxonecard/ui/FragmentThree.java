@@ -68,7 +68,8 @@ public class FragmentThree extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int price = prices.get(position);
                 Message msgPrice = Message.obtain();
-                msgPrice.obj = price;
+                msgPrice.obj = 1;
+//                msgPrice.obj = price;
                 msgPrice.what = 4;
                 navHandle.sendMessage(msgPrice);
             }
