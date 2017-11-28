@@ -28,6 +28,8 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.OnClick;
 
+import static com.sxonecard.CardApplication.a_money;
+
 /**
  * Created by pc on 2017-04-25.
  * 选择支付方式（微信，支付宝）
@@ -145,6 +147,7 @@ public class FragmentFive extends BaseFragment {
         paramMap.put("Act", act);
         paramMap.put("Time", time);
         paramMap.put("Fee", fee);
+        paramMap.put("oldMoney", String.valueOf(a_money));
         paramMap.put("CardNo", CardApplication.getInstance().getCheckCard().getCardNO());
 
         paramMap.put("ImeiId", imeiId);
@@ -197,6 +200,7 @@ public class FragmentFive extends BaseFragment {
         paramMap.put("Act", act);
         paramMap.put("Time", time);
         paramMap.put("Fee", fee);
+        paramMap.put("oldMoney", String.valueOf(a_money));
         paramMap.put("ImeiId", imeiId);
         paramMap.put("CardNo", CardApplication.getInstance().getCheckCard().getCardNO());
         paramMap.put("Md5Code", md5Code);
