@@ -84,6 +84,9 @@ public class CardActivity extends FragmentActivity {
     private String curr_ads = "";
     private int current_fragment = 0;
 
+//    是否全屏显示
+    private boolean isFullScreen = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,12 +107,15 @@ public class CardActivity extends FragmentActivity {
         initView();
         registerBus();
         initDevice();
+        setListener();
         if (isDebug) {
+            isFullScreen = false;
             ivLogo.setVisibility(View.GONE);
-            setListener();
         } else {
+            isFullScreen = true;
             llTest.setVisibility(View.GONE);
         }
+//        setFullScreen(isFullScreen);
         // FIXME: 2017/11/17 本地记录特定的Log日志文件
         LogcatHelper.getInstance().start();
     }
@@ -129,6 +135,25 @@ public class CardActivity extends FragmentActivity {
                 PrinterTestUtil.getInstance().send();
             }
         });
+
+        ivLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                setFullScreen(isFullScreen);
+            }
+        });
+    }
+
+    public void setFullScreen(boolean isFullScreen) {
+        View decorView = getWindow().getDecorView();
+        if (isFullScreen) {
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+        } else {
+            int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
+        this.isFullScreen = !isFullScreen;
     }
 
     /**
