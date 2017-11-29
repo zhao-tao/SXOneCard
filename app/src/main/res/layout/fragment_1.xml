@@ -4,20 +4,11 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_logo" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="622dp"
         android:background="@drawable/bg"
         android:orientation="vertical">
-
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@color/dark"
-            android:text="签退" />
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -38,8 +38,6 @@ import static com.sxonecard.http.Constants.isDebug;
 
 public class FragmentOne extends BaseFragment {
     private AnimationDrawable animationDrawable;
-    @Bind(R.id.button1)
-    Button button1;
     @Bind(R.id.gongjiaoka)
     ImageView gongjiaoka;
     ErrorDialog dialog;
@@ -53,18 +51,6 @@ public class FragmentOne extends BaseFragment {
 
     @Override
     public void initView() {
-        if(!isDebug){
-            button1.setVisibility(View.GONE);
-        }
-//        签退操作
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SerialPort.getInstance().exitDevice();
-//                navHandle.sendEmptyMessage(1);
-            }
-        });
-
         //注册检测感应区卡片bus.
         registerCheckCardBus();
         animationDrawable = (AnimationDrawable) gongjiaoka.getDrawable();

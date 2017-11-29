@@ -43,6 +43,8 @@ import butterknife.Bind;
 import rx.Observable;
 import rx.functions.Action1;
 
+import static com.sxonecard.http.Constants.PAGE_PAY_METHOD;
+
 
 /**
  * Created by pc on 2017-04-25.
@@ -129,7 +131,7 @@ public class FragmentSix extends BaseFragment {
 //                返回到支付方式选择（必须带入已选择的充值金额）
                 Message message = new Message();
                 message.obj = gsonData.getRechangeFee();
-                message.what = 4;
+                message.what = PAGE_PAY_METHOD;
                 navHandle.sendMessage(message);
             }
         });

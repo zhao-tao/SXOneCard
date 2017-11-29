@@ -4,8 +4,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_logo" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="622dp"
@@ -86,8 +84,6 @@
                 </RelativeLayout>
             </RelativeLayout>
         </LinearLayout>
-
-        Y
 
         <ImageView
             android:id="@+id/progress_img"

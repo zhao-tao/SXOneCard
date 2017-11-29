@@ -16,6 +16,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.baidu.mobstat.SendStrategyEnum;
@@ -35,13 +39,26 @@ import com.sxonecard.http.bean.AdResult;
 import com.sxonecard.http.bean.SetBean;
 import com.sxonecard.util.DownLoadFile;
 import com.sxonecard.util.LogcatHelper;
+import com.sxonecard.util.PrinterUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.functions.Action1;
+
+import static com.sxonecard.http.Constants.PAGE_AD;
+import static com.sxonecard.http.Constants.PAGE_CHECK_CARD;
+import static com.sxonecard.http.Constants.PAGE_CHOOSE_MONEY;
+import static com.sxonecard.http.Constants.PAGE_CHOOSE_SERVICE;
+import static com.sxonecard.http.Constants.PAGE_DEVICE_EXCEPT;
+import static com.sxonecard.http.Constants.PAGE_PAY_METHOD;
+import static com.sxonecard.http.Constants.PAGE_PAY_SUCCESS;
+import static com.sxonecard.http.Constants.PAGE_QR_CODE;
+import static com.sxonecard.http.Constants.PAGE_RECHANGE_ERROR;
+import static com.sxonecard.http.Constants.isDebug;
 
 /**
  * @Author
@@ -49,8 +66,16 @@ import rx.functions.Action1;
 
 public class CardActivity extends FragmentActivity {
     private static String TAG = "CardActivity";
-    final Handler navHandler = new NavigationHandler(this);
+    @Bind(R.id.ll_test)
+    LinearLayout llTest;
+    @Bind(R.id.iv_logo)
+    ImageView ivLogo;
+    @Bind(R.id.btn_exit)
+    Button btnExit;
+    @Bind(R.id.btn_print)
+    Button btnPrint;
 
+    final Handler navHandler = new NavigationHandler(this);
     final Handler navHandler_gg = new NavigationHandler(this);
     Observable<String> adObservable;
     Observable<String> checkModuleObservable;
@@ -79,8 +104,30 @@ public class CardActivity extends FragmentActivity {
         initView();
         registerBus();
         initDevice();
+        if (isDebug) {
+            ivLogo.setVisibility(View.GONE);
+            setListener();
+        } else {
+            llTest.setVisibility(View.GONE);
+        }
         // FIXME: 2017/11/17 本地记录特定的Log日志文件
         LogcatHelper.getInstance().start();
+    }
+
+    private void setListener() {
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SerialPort.getInstance().exitDevice();
+            }
+        });
+
+        btnPrint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PrinterUtil.getInstance().send();
+            }
+        });
     }
 
     /**
@@ -315,39 +362,34 @@ public class CardActivity extends FragmentActivity {
         current_fragment = index;
         Log.i(TAG, "changeAction: ===" + index);
         switch (index) {
-            case 0:
+            case PAGE_CHECK_CARD:
                 fragment = new FragmentOne();
                 break;
-            case 1:
-                if (isNetworkAvailable(this)) {
-                    fragment = new FragmentTwo();
-                } else {
-                    Toast.makeText(this, R.string.netErr, Toast.LENGTH_LONG).show();
-                }
+            case PAGE_CHOOSE_SERVICE:
+                fragment = new FragmentTwo();
                 break;
-            case 2:
+            case PAGE_CHOOSE_MONEY:
                 fragment = new FragmentThree();
                 break;
-            case 3:
-                fragment = new FragmentFour();
-                break;
-            case 4:
+//            case 3:
+//                fragment = new FragmentFour();
+//                break;
+            case PAGE_PAY_METHOD:
                 fragment = new FragmentFive();
                 break;
-            case 5:
+            case PAGE_QR_CODE:
                 fragment = new FragmentSix();
                 break;
-            case 6:
+            case PAGE_PAY_SUCCESS:
                 fragment = new FragmentSeven();
                 break;
-            case 400:
+            case PAGE_RECHANGE_ERROR:
                 fragment = new ReChangeError();
                 break;
-            case 401:
+            case PAGE_DEVICE_EXCEPT:
                 fragment = new DeviceException();
                 break;
-            case 99:
-
+            case PAGE_AD:
                 List<AdBean> adlist = CardApplication.adlist;
                 int ttt = CardApplication.index;
                 AdBean ad = adlist.get(ttt);
@@ -362,8 +404,17 @@ public class CardActivity extends FragmentActivity {
             default:
                 fragment = new FragmentOne();
         }
-        if (99 == index) {
+
+        if (PAGE_AD == index) {
             return;
+        }
+
+        //        网络不可用时返回首页
+        if (!isNetworkAvailable(this)) {
+            Toast.makeText(this, R.string.netErr, Toast.LENGTH_LONG).show();
+            if (PAGE_CHECK_CARD != index) {
+                fragment = new FragmentOne();
+            }
         }
 
         fragment.setNavHandle(navHandler);
