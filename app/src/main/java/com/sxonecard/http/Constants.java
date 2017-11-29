@@ -6,7 +6,7 @@ package com.sxonecard.http;
  */
 
 public class Constants {
-    public static boolean isDebug = true;
+    public static boolean isDebug = false;
     public static String BASEURL = "http://pay.thecitypass.cn/";
     // public static String BASEURL = "http://www.bjilvy.cn/";
 

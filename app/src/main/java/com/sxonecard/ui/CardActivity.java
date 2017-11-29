@@ -39,7 +39,7 @@ import com.sxonecard.http.bean.AdResult;
 import com.sxonecard.http.bean.SetBean;
 import com.sxonecard.util.DownLoadFile;
 import com.sxonecard.util.LogcatHelper;
-import com.sxonecard.util.PrinterUtil;
+import com.sxonecard.util.PrinterTestUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -125,7 +125,8 @@ public class CardActivity extends FragmentActivity {
         btnPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PrinterUtil.getInstance().send();
+//                测试打印小票
+                PrinterTestUtil.getInstance().send();
             }
         });
     }
@@ -412,7 +413,7 @@ public class CardActivity extends FragmentActivity {
         //        网络不可用时返回首页
         if (!isNetworkAvailable(this)) {
             Toast.makeText(this, R.string.netErr, Toast.LENGTH_LONG).show();
-            if (PAGE_CHECK_CARD != index) {
+            if (PAGE_CHECK_CARD != index && PAGE_DEVICE_EXCEPT != index) {
                 fragment = new FragmentOne();
             }
         }
