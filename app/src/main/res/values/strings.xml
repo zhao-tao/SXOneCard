@@ -15,4 +15,5 @@
     <string name="chargeError">抱歉，充值失败，请联系客服</string>
     <string name="chargeExpired">充值失败！您的二维码已过期，请取走您的卡片！</string>
     <string name="deviceErr">设备维护中,请稍后......</string>
+    <string name="netErr">当前无网络,请稍后......</string>
 </resources>

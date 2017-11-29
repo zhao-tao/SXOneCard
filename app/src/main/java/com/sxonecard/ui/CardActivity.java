@@ -319,7 +319,11 @@ public class CardActivity extends FragmentActivity {
                 fragment = new FragmentOne();
                 break;
             case 1:
-                fragment = new FragmentTwo();
+                if (isNetworkAvailable(this)) {
+                    fragment = new FragmentTwo();
+                } else {
+                    Toast.makeText(this, R.string.netErr, Toast.LENGTH_LONG).show();
+                }
                 break;
             case 2:
                 fragment = new FragmentThree();

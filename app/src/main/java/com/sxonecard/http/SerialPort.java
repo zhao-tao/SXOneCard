@@ -208,6 +208,18 @@ public class SerialPort {
         return buff;
     }
 
+    /**
+     * 发送签退命令
+     *
+     * @return
+     */
+    public void exitDevice() {
+        byte[] buff = new byte[11];
+        ByteUtil.hexStringToBytes("43,56,65,ff,ff,04,00,09,00,2f,be", buff, 0);
+        boolean result = sendBuffer(buff);
+        Log.i(TAG, result ? "发送签退命令成功" : "发送签退命令失败");
+    }
+
     public void deviceShutDown() {
         sendBuffer(shutDownDevice());
     }

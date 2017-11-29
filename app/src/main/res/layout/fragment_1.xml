@@ -14,10 +14,10 @@
 
         <Button
             android:id="@+id/button1"
-            android:layout_width="300dp"
-            android:layout_height="100dp"
-            android:text="测试"
-            android:visibility="gone" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@color/dark"
+            android:text="签退" />
 
         <RelativeLayout
             android:layout_width="match_parent"

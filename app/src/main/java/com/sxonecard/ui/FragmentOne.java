@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.sxonecard.BuildConfig;
@@ -29,6 +28,8 @@ import java.util.Random;
 import butterknife.Bind;
 import rx.Observable;
 import rx.functions.Action1;
+
+import static com.sxonecard.http.Constants.isDebug;
 
 /**
  * Created by HeQiang on 2017/4/22.
@@ -52,11 +53,15 @@ public class FragmentOne extends BaseFragment {
 
     @Override
     public void initView() {
-//        测试按钮，暂未使用
+        if(!isDebug){
+            button1.setVisibility(View.GONE);
+        }
+//        签退操作
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navHandle.sendEmptyMessage(1);
+                SerialPort.getInstance().exitDevice();
+//                navHandle.sendEmptyMessage(1);
             }
         });
 

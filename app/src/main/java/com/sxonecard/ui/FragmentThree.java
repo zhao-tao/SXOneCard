@@ -2,7 +2,6 @@ package com.sxonecard.ui;
 
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -22,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+
+import static com.sxonecard.http.Constants.isDebug;
 
 /**
  * 选择充值金额
@@ -68,8 +69,7 @@ public class FragmentThree extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int price = prices.get(position);
                 Message msgPrice = Message.obtain();
-                msgPrice.obj = 1;
-//                msgPrice.obj = price;
+                msgPrice.obj = isDebug ? 1 : price;
                 msgPrice.what = 4;
                 navHandle.sendMessage(msgPrice);
             }
@@ -90,15 +90,15 @@ public class FragmentThree extends BaseFragment {
             }
         });
 
-        if(BuildConfig.AUTO_TEST){
+        if (BuildConfig.AUTO_TEST) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if(priceGrid == null)
+                    if (priceGrid == null)
                         return;
-                    priceGrid.performItemClick(priceGrid.getChildAt(0),0,priceGrid.getItemIdAtPosition(0));
+                    priceGrid.performItemClick(priceGrid.getChildAt(0), 0, priceGrid.getItemIdAtPosition(0));
                 }
-            },5000);
+            }, 5000);
         }
     }
 
