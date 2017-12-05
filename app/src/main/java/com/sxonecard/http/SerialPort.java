@@ -120,7 +120,7 @@ public class SerialPort {
                     onChargeCardCmd(srcBuffer);
                     break;
                 case 5:
-                    //向刷卡模块发送关机命令.
+                    //关闭刷卡模块
                     parseShutDownCmd(srcBuffer);
                     break;
                 case 6:
@@ -221,13 +221,14 @@ public class SerialPort {
     }
 
     public void deviceShutDown() {
+        Log.i(TAG, "发送关机命令");
         sendBuffer(shutDownDevice());
     }
 
     private byte[] shutDownDevice() {
         byte[] buff = new byte[20];
-        int index = ByteUtil.hexStringToBytes("43,56,65,FF,FF,05,00,05,08,FA,00", buff, 0);
-        //TODO：开机时间.关机时间设定
+        int index = ByteUtil.hexStringToBytes("43,56,65,FF,FF,05,00,05,08,00,FA", buff, 0);
+        //TODO：开机时间设定
         String startTime = CardApplication.getInstance().getConfig().getStartTime();
         index = ByteUtil.date_tobuff(startTime, buff, index);
 

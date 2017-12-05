@@ -2,6 +2,7 @@ package com.sxonecard.util;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Calendar;
@@ -100,4 +101,17 @@ public class DateTools {
 				"yyyy-MM-dd HH:mm:ss");
 		return sdfTime.format(new Date());
 	}
+
+	/**
+	 * string类型时间转换为date
+	 * @param strDate
+	 * @return
+	 */
+	public static Date strToDateLong(String strDate) {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		ParsePosition pos = new ParsePosition(0);
+		Date strtodate = formatter.parse(strDate, pos);
+		return strtodate;
+	}
+
 }

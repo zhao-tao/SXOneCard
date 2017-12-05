@@ -250,6 +250,7 @@ public class FragmentSix extends BaseFragment {
         if (SerialPort.getInstance().sendRechargeCmd(status.getPrice())) {
             setVoice(SoundService.CHONGZHIZHONG);
             scanLayout.setVisibility(View.GONE);
+            mBackTv.setVisibility(View.GONE);
             progressImg.setVisibility(View.VISIBLE);
         } else {
             Message scan = navHandle.obtainMessage(400, getText(R.string.chargeError));

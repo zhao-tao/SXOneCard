@@ -17,6 +17,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,12 +39,15 @@ import com.sxonecard.http.SerialPort;
 import com.sxonecard.http.bean.AdBean;
 import com.sxonecard.http.bean.AdResult;
 import com.sxonecard.http.bean.SetBean;
+import com.sxonecard.util.DateTools;
 import com.sxonecard.util.DownLoadFile;
 import com.sxonecard.util.LogcatHelper;
 import com.sxonecard.util.PrinterTestUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -84,8 +89,22 @@ public class CardActivity extends FragmentActivity {
     private String curr_ads = "";
     private int current_fragment = 0;
 
-//    是否全屏显示
+    //    是否全屏显示
     private boolean isFullScreen = false;
+
+    //    定时关机
+    private Handler deviceHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    SerialPort.getInstance().deviceShutDown();
+                    break;
+            }
+
+        }
+    };
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -145,15 +164,18 @@ public class CardActivity extends FragmentActivity {
     }
 
     public void setFullScreen(boolean isFullScreen) {
-        View decorView = getWindow().getDecorView();
+
+        //隐藏导航栏，并且点击不出现
+        Window window = getWindow();
+        WindowManager.LayoutParams attributes = window.getAttributes();
         if (isFullScreen) {
-            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
-            decorView.setSystemUiVisibility(uiOptions);
+            //设置为非全屏
+            attributes.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE;
         } else {
-            int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
-            decorView.setSystemUiVisibility(uiOptions);
+            //设置为全屏(隐藏状态栏和导航栏，禁止状态栏下拉和导航栏点击出现)
+            attributes.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE;
         }
-        this.isFullScreen = !isFullScreen;
+        window.setAttributes(attributes);
     }
 
     /**
@@ -190,7 +212,7 @@ public class CardActivity extends FragmentActivity {
                     public void run() {
                         initConfiguration();
                     }
-                }, 1000);
+                }, 3000);
             }
         };
 
@@ -463,7 +485,6 @@ public class CardActivity extends FragmentActivity {
      * 更新时间 设置开关机.
      */
     private void syncTimeAndShutDownDevice() {
-        //延时20s执行
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -472,8 +493,17 @@ public class CardActivity extends FragmentActivity {
                     //设备未连接，不发送
                     if (!CardApplication.getInstance().isDeviceSuccess())
                         return;
-                    //开关机设置.
-                    SerialPort.getInstance().deviceShutDown();
+                    //开关机设置，指定的开机时间设置
+                    TimerTask task = new TimerTask() {
+                        @Override
+                        public void run() {
+                            deviceHandler.sendEmptyMessage(1);
+                        }
+                    };
+                    Timer timer = new Timer(true);
+                    // TODO: 2017/12/5 定时在指定关机时间执行
+//                    timer.schedule(task, DateTools.strToDateLong("2017-12-05 11:18:10"));
+                    timer.schedule(task, DateTools.strToDateLong(CardApplication.getInstance().getConfig().getEndTime()));
                     //主从机时间同步.
                     SerialPort.getInstance().deviceTimeSync();
                 }
