@@ -1,13 +1,14 @@
 package com.sxonecard.ui;
 
-import android.content.SharedPreferences;
+import android.os.Message;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.sxonecard.R;
 import com.sxonecard.base.BaseFragment;
-import com.sxonecard.http.bean.ReChangeBean;
-import com.sxonecard.http.bean.TradeStatusBean;
+import com.sxonecard.http.bean.ChangeData;
+import com.sxonecard.http.bean.ReChangeSQL;
 
 import org.litepal.crud.DataSupport;
 
@@ -15,16 +16,16 @@ import java.util.List;
 
 import butterknife.Bind;
 
-import static android.content.Context.MODE_PRIVATE;
+import static com.sxonecard.http.Constants.PAGE_CHECK_CARD;
+import static com.sxonecard.http.Constants.PAGE_QR_CODE;
 
 
 /**
  * 补充值页面（已确定卡号和补充值时间符合后）仅带入String类型充值金额
  * 收到串口识别卡信息后，判断是否为补充值的卡，如果是，跳转到此页面（携带余额信息，同页面2）
- *
+ * <p>
  * 点退款删除数据库字段，返回首页
  * 点补充值到二维码页面，并跳过二维码，直接支付
- *
  */
 public class FragmentReChange extends BaseFragment {
     @Bind(R.id.user_recharge_money)
@@ -47,18 +48,39 @@ public class FragmentReChange extends BaseFragment {
         //播放补充值操作语音
 //        setVoice(SoundService.RECHANGE);
         msg = getArguments().getString("msg");
-        userRechargeMoney.setText("卡内当前余额:" + msg + "元");
+        userRechargeMoney.setText("可补充值金额:" + msg + "元");
         mBackTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navHandle.sendEmptyMessage(0);
             }
         });
+        initListener();
 
+    }
 
-//        获取数据库中的补充值信息
-        List<ReChangeBean> all = DataSupport.findAll(ReChangeBean.class);
+    private void initListener() {
+        tvReChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Message msgCode = Message.obtain();
+                ChangeData changeData = new ChangeData();
+                changeData.setRechange(true);
+                changeData.setRechangeFee(msg);
+                // 利用gson对象生成json字符串
+                Gson gson = new Gson();
+                msgCode.obj = gson.toJson(changeData);
+                msgCode.what = PAGE_QR_CODE;
+                navHandle.sendMessage(msgCode);
+            }
+        });
 
+        tvReFund.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navHandle.sendEmptyMessage(PAGE_CHECK_CARD);
+            }
+        });
     }
 
     @Override

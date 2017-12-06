@@ -102,10 +102,8 @@ public class CardActivity extends FragmentActivity {
                     SerialPort.getInstance().deviceShutDown();
                     break;
             }
-
         }
     };
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

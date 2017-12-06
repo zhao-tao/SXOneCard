@@ -15,7 +15,7 @@ import com.sxonecard.R;
 import com.sxonecard.base.BaseFragment;
 import com.sxonecard.base.RxBus;
 import com.sxonecard.http.SerialPort;
-import com.sxonecard.http.bean.ReChangeBean;
+import com.sxonecard.http.bean.ReChangeSQL;
 import com.sxonecard.http.bean.RechargeCardBean;
 
 import org.litepal.crud.DataSupport;
@@ -134,9 +134,9 @@ public class FragmentOne extends BaseFragment {
                     Log.i("checkCard", "正常卡" + checkCardBean.getCardNO());
 
                     // TODO: 2017/12/6 获取补充值暂存信息
-                    List<ReChangeBean> all = DataSupport.findAll(ReChangeBean.class);
+                    List<ReChangeSQL> all = DataSupport.findAll(ReChangeSQL.class);
                     if (null != all && all.size() != 0) {
-                        for (ReChangeBean bean : all) {
+                        for (ReChangeSQL bean : all) {
                             if (bean.getCard().equals(checkCardBean.getCardNO())) {
                                 //写入充值信息，跳转到补充值页面
                                 Message msg = new Message();

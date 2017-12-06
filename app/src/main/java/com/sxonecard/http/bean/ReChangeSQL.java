@@ -4,9 +4,10 @@ import org.litepal.crud.DataSupport;
 
 /**
  * Created by Administrator on 2017/12/6.
+ * 补充值数据的数据库
  */
 
-public class ReChangeBean extends DataSupport {
+public class ReChangeSQL extends DataSupport {
     private String card;
     private String money;
     private long time;

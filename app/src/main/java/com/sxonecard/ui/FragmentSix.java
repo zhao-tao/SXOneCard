@@ -32,7 +32,7 @@ import com.sxonecard.http.HttpRequestProxy;
 import com.sxonecard.http.MyCountDownTimer;
 import com.sxonecard.http.SerialPort;
 import com.sxonecard.http.bean.ChangeData;
-import com.sxonecard.http.bean.ReChangeBean;
+import com.sxonecard.http.bean.ReChangeSQL;
 import com.sxonecard.http.bean.RechargeCardBean;
 import com.sxonecard.http.bean.TradeStatusBean;
 import com.sxonecard.util.EncryptUtil;
@@ -111,13 +111,20 @@ public class FragmentSix extends BaseFragment {
 
     @Override
     public void initView() {
-//        判断是正常充值还是补充值
-
-
-        setVoice(SoundService.ERWEIMA);
         String msgArrag = this.getArguments().getString("msg").toString();
         Gson gson = new Gson();
         changeData = gson.fromJson(msgArrag, ChangeData.class);
+
+//        判断是正常充值还是补充值
+        if (changeData.isRechange()) {
+//            添加的补充值逻辑，直接跳转到支付流程
+            TradeStatusBean tradeData = new TradeStatusBean();
+            tradeData.setPrice(Integer.getInteger(changeData.getRechangeFee()));
+            sendSuccTradeData(tradeData);
+            return;
+        }
+
+        setVoice(SoundService.ERWEIMA);
 
         String qrCodeString = changeData.getQrCodeString();
         imeiId = changeData.getImeiId();
@@ -133,7 +140,7 @@ public class FragmentSix extends BaseFragment {
         requestTradeStatus();
         Log.i("订单支付成功后订单轮询...", DateUtil.getCurrentDateTime());
         // TODO: 2017/12/6 测试数据库写入，待删
-        ReChangeBean recharge = new ReChangeBean();
+        ReChangeSQL recharge = new ReChangeSQL();
         recharge.setValue(CardApplication.getInstance().getCheckCard().getCardNO(), changeData.getRechangeFee(), System.currentTimeMillis());
         recharge.save();
 
@@ -165,7 +172,7 @@ public class FragmentSix extends BaseFragment {
             @Override
             public void call(String reChangeCardJson) {
                 // TODO: 2017/12/6 保存补充值暂存信息
-                ReChangeBean recharge = new ReChangeBean();
+                ReChangeSQL recharge = new ReChangeSQL();
                 recharge.setValue(CardApplication.getInstance().getCheckCard().getCardNO(),
                         changeData.getRechangeFee(), System.currentTimeMillis());
                 recharge.save();
