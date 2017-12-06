@@ -31,7 +31,7 @@ import com.sxonecard.http.HttpDataSubscriber;
 import com.sxonecard.http.HttpRequestProxy;
 import com.sxonecard.http.MyCountDownTimer;
 import com.sxonecard.http.SerialPort;
-import com.sxonecard.http.bean.GsonData;
+import com.sxonecard.http.bean.ChangeData;
 import com.sxonecard.http.bean.ReChangeBean;
 import com.sxonecard.http.bean.RechargeCardBean;
 import com.sxonecard.http.bean.TradeStatusBean;
@@ -53,6 +53,8 @@ import static com.sxonecard.http.Constants.PAGE_PAY_SUCCESS;
 /**
  * Created by pc on 2017-04-25.
  * 二维码支付，等待支付成功的提示框
+ * 1 从选择支付方式跳入（带入信息）
+ * 2 从补充值进入，直接进入支付页面
  */
 
 public class FragmentSix extends BaseFragment {
@@ -78,7 +80,7 @@ public class FragmentSix extends BaseFragment {
     private int transactionStatus = 0;
     Observable<RechargeCardBean> reChangeCardObservable;
     Observable<String> chargeErrorObservable;
-    private GsonData gsonData;
+    private ChangeData changeData;
 
     private static Bitmap addLogo(Bitmap src, Bitmap logo) {
         int srcWidth = src.getWidth();
@@ -109,15 +111,17 @@ public class FragmentSix extends BaseFragment {
 
     @Override
     public void initView() {
+//        判断是正常充值还是补充值
+
 
         setVoice(SoundService.ERWEIMA);
         String msgArrag = this.getArguments().getString("msg").toString();
         Gson gson = new Gson();
-        gsonData = gson.fromJson(msgArrag, GsonData.class);
+        changeData = gson.fromJson(msgArrag, ChangeData.class);
 
-        String qrCodeString = gsonData.getQrCodeString();
-        imeiId = gsonData.getImeiId();
-        orderId = gsonData.getOrderId();
+        String qrCodeString = changeData.getQrCodeString();
+        imeiId = changeData.getImeiId();
+        orderId = changeData.getOrderId();
 
         Bitmap qrBitmap = generateBitmap(qrCodeString, 400, 400);
         Bitmap logoBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
@@ -128,10 +132,9 @@ public class FragmentSix extends BaseFragment {
         registerListener();
         requestTradeStatus();
         Log.i("订单支付成功后订单轮询...", DateUtil.getCurrentDateTime());
-
+        // TODO: 2017/12/6 测试数据库写入，待删
         ReChangeBean recharge = new ReChangeBean();
-        recharge.setValue(CardApplication.getInstance().getCheckCard().getCardNO(),
-                Integer.getInteger(gsonData.getRechangeFee()), System.currentTimeMillis());
+        recharge.setValue(CardApplication.getInstance().getCheckCard().getCardNO(), changeData.getRechangeFee(), System.currentTimeMillis());
         recharge.save();
 
         mBackTv.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +142,7 @@ public class FragmentSix extends BaseFragment {
             public void onClick(View v) {
 //                返回到支付方式选择（必须带入已选择的充值金额）
                 Message message = new Message();
-                message.obj = gsonData.getRechangeFee();
+                message.obj = changeData.getRechangeFee();
                 message.what = PAGE_PAY_METHOD;
                 navHandle.sendMessage(message);
             }
@@ -164,7 +167,7 @@ public class FragmentSix extends BaseFragment {
                 // TODO: 2017/12/6 保存补充值暂存信息
                 ReChangeBean recharge = new ReChangeBean();
                 recharge.setValue(CardApplication.getInstance().getCheckCard().getCardNO(),
-                        Integer.getInteger(gsonData.getRechangeFee()), System.currentTimeMillis());
+                        changeData.getRechangeFee(), System.currentTimeMillis());
                 recharge.save();
 
                 Message msgCode = navHandle.obtainMessage(400, getText(R.string.chargeError));

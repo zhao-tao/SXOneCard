@@ -8,10 +8,10 @@ import org.litepal.crud.DataSupport;
 
 public class ReChangeBean extends DataSupport {
     private String card;
-    private int money;
+    private String money;
     private long time;
 
-    public void setValue(String card, int money, long time) {
+    public void setValue(String card, String money, long time) {
         this.card = card;
         this.money = money;
         this.time = time;
@@ -25,11 +25,11 @@ public class ReChangeBean extends DataSupport {
         this.card = card;
     }
 
-    public int getMoney() {
+    public String getMoney() {
         return money;
     }
 
-    public void setMoney(int money) {
+    public void setMoney(String money) {
         this.money = money;
     }
 

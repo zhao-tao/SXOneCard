@@ -82,9 +82,6 @@ dependencies {
     compile files('libs/universal-image-loader-1.9.5.jar')
     compile files('libs/android-serialport.jar')
     compile files('libs/javalib.jar')
-//    内存分析
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
     //    compile files('libs/android-core-3.3.0.jar')
     //    compile files('libs/core-3.3.0.jar')
     compile 'com.journeyapps:zxing-android-embedded:2.3.0@aar'

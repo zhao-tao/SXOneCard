@@ -19,7 +19,7 @@ import com.sxonecard.http.HttpDataListener;
 import com.sxonecard.http.HttpDataSubscriber;
 import com.sxonecard.http.HttpRequestProxy;
 import com.sxonecard.http.bean.AlipayBean;
-import com.sxonecard.http.bean.GsonData;
+import com.sxonecard.http.bean.ChangeData;
 import com.sxonecard.util.EncryptUtil;
 
 import java.util.HashMap;
@@ -29,6 +29,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 
 import static com.sxonecard.CardApplication.a_money;
+import static com.sxonecard.http.Constants.PAGE_QR_CODE;
 
 /**
  * Created by pc on 2017-04-25.
@@ -116,16 +117,16 @@ public class FragmentFive extends BaseFragment {
                 }
                 CardApplication.getInstance().setCurrentOrderId(alipayBean.getOrderId());
                 Message msgCode = Message.obtain();
-                GsonData gsonData = new GsonData();
-                gsonData.setOrderId(alipayBean.getOrderId());
-                gsonData.setQrCodeString(alipayBean.getQrCodeString());
-                gsonData.setRechangeFee(rechagePrice);
-                gsonData.setImeiId(imeiId);
+                ChangeData changeData = new ChangeData();
+                changeData.setOrderId(alipayBean.getOrderId());
+                changeData.setQrCodeString(alipayBean.getQrCodeString());
+                changeData.setRechangeFee(rechagePrice);
+                changeData.setImeiId(imeiId);
 
                 // 利用gson对象生成json字符串
                 Gson gson = new Gson();
-                msgCode.obj = gson.toJson(gsonData);
-                msgCode.what = 5;
+                msgCode.obj = gson.toJson(changeData);
+                msgCode.what = PAGE_QR_CODE;
                 navHandle.sendMessage(msgCode);
             }
 
@@ -170,14 +171,14 @@ public class FragmentFive extends BaseFragment {
                 }
                 CardApplication.getInstance().setCurrentOrderId(alipayBean.getOrderId());
                 Message msgCode = Message.obtain();
-                GsonData gsonData = new GsonData();
-                gsonData.setOrderId(alipayBean.getOrderId());
-                gsonData.setQrCodeString(alipayBean.getQrCodeString());
-                gsonData.setRechangeFee(rechagePrice);
-                gsonData.setImeiId(imeiId);
+                ChangeData changeData = new ChangeData();
+                changeData.setOrderId(alipayBean.getOrderId());
+                changeData.setQrCodeString(alipayBean.getQrCodeString());
+                changeData.setRechangeFee(rechagePrice);
+                changeData.setImeiId(imeiId);
                 // 利用gson对象生成json字符串
                 Gson gson = new Gson();
-                msgCode.obj = gson.toJson(gsonData);
+                msgCode.obj = gson.toJson(changeData);
                 msgCode.what = 5;
                 navHandle.sendMessage(msgCode);
             }

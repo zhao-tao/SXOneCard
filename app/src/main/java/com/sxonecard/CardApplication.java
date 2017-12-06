@@ -1,5 +1,6 @@
 package com.sxonecard;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -14,6 +15,7 @@ import com.sxonecard.http.bean.AdBean;
 import com.sxonecard.http.bean.RechargeCardBean;
 import com.sxonecard.http.bean.SetBean;
 
+import org.litepal.LitePal;
 import org.litepal.LitePalApplication;
 import org.litepal.tablemanager.Connector;
 
@@ -69,8 +71,6 @@ public class CardApplication extends LitePalApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-//        LeakCanary.install(this);
-
         initImageLoader();
         instance = this;
     }
@@ -106,7 +106,6 @@ public class CardApplication extends LitePalApplication {
                 .build();
         ImageLoader.getInstance().init(configuration);
         OrderDb.init(getApplicationContext());
-        Connector.getDatabase();
 //        CrashHandler crashHandler = CrashHandler.getInstance();
 //        crashHandler.init(this);
     }

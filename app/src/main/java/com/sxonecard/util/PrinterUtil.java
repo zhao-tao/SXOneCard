@@ -4,21 +4,13 @@ package com.sxonecard.util;
  * Created by Administrator on 2017-5-23.
  */
 
-import android.graphics.Bitmap;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-
-import com.google.gson.Gson;
 import com.sxonecard.CardApplication;
 import com.sxonecard.http.DateUtil;
-import com.sxonecard.http.bean.GsonData;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 
 import android_serialport_api.SerialPort;
 

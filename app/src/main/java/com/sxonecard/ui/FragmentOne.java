@@ -1,6 +1,5 @@
 package com.sxonecard.ui;
 
-import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,7 +31,8 @@ import butterknife.Bind;
 import rx.Observable;
 import rx.functions.Action1;
 
-import static android.content.Context.MODE_PRIVATE;
+import static com.sxonecard.http.Constants.PAGE_CHOOSE_SERVICE;
+import static com.sxonecard.http.Constants.PAGE_RECHANGE;
 
 /**
  * Created by HeQiang on 2017/4/22.
@@ -134,10 +134,21 @@ public class FragmentOne extends BaseFragment {
                     Log.i("checkCard", "正常卡" + checkCardBean.getCardNO());
 
                     // TODO: 2017/12/6 获取补充值暂存信息
-//                    List<ReChangeBean> all = DataSupport.findAll(ReChangeBean.class);
-
+                    List<ReChangeBean> all = DataSupport.findAll(ReChangeBean.class);
+                    if (null != all && all.size() != 0) {
+                        for (ReChangeBean bean : all) {
+                            if (bean.getCard().equals(checkCardBean.getCardNO())) {
+                                //写入充值信息，跳转到补充值页面
+                                Message msg = new Message();
+                                msg.what = PAGE_RECHANGE;
+                                msg.obj = bean.getMoney();
+                                navHandle.sendMessage(msg);
+                                return;
+                            }
+                        }
+                    }
                     Message msg = new Message();
-                    msg.what = 1;
+                    msg.what = PAGE_CHOOSE_SERVICE;
                     double balance = checkCardBean.getAmount() * 1.0 / 100;
                     DecimalFormat df = new DecimalFormat("######0.00");
                     msg.obj = df.format(balance);
