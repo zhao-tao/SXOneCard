@@ -62,6 +62,7 @@ import static com.sxonecard.http.Constants.PAGE_DEVICE_EXCEPT;
 import static com.sxonecard.http.Constants.PAGE_PAY_METHOD;
 import static com.sxonecard.http.Constants.PAGE_PAY_SUCCESS;
 import static com.sxonecard.http.Constants.PAGE_QR_CODE;
+import static com.sxonecard.http.Constants.PAGE_RECHANGE;
 import static com.sxonecard.http.Constants.PAGE_RECHANGE_ERROR;
 import static com.sxonecard.http.Constants.isDebug;
 
@@ -430,6 +431,9 @@ public class CardActivity extends FragmentActivity {
                 break;
             case PAGE_PAY_SUCCESS:
                 fragment = new FragmentSeven();
+                break;
+            case PAGE_RECHANGE:
+                fragment = new FragmentReChange();
                 break;
             case PAGE_RECHANGE_ERROR:
                 fragment = new ReChangeError();

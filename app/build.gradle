@@ -96,4 +96,7 @@ dependencies {
     compile files('libs/printlib.jar')
 //    百度统计
     compile files('libs/Baidu_Mtj_3.8.1.1.jar')
+
+//    数据库
+    compile 'org.litepal.android:core:1.6.0'
 }

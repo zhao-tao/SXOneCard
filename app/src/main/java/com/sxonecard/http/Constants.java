@@ -22,5 +22,9 @@ public class Constants {
     public static final int PAGE_DEVICE_EXCEPT = 401;
     public static final int PAGE_AD = 99;
 
+    //    Log类型
+    public static final String LOG_CHANGE = "change";
+
+
     public static int NET_ERR = 1000;
 }

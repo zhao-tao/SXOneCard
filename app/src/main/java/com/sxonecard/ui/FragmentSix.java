@@ -20,6 +20,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.sxonecard.BuildConfig;
+import com.sxonecard.CardApplication;
 import com.sxonecard.R;
 import com.sxonecard.background.SoundService;
 import com.sxonecard.base.BaseFragment;
@@ -31,6 +32,7 @@ import com.sxonecard.http.HttpRequestProxy;
 import com.sxonecard.http.MyCountDownTimer;
 import com.sxonecard.http.SerialPort;
 import com.sxonecard.http.bean.GsonData;
+import com.sxonecard.http.bean.ReChangeBean;
 import com.sxonecard.http.bean.RechargeCardBean;
 import com.sxonecard.http.bean.TradeStatusBean;
 import com.sxonecard.util.EncryptUtil;
@@ -43,7 +45,9 @@ import butterknife.Bind;
 import rx.Observable;
 import rx.functions.Action1;
 
+import static com.sxonecard.http.Constants.LOG_CHANGE;
 import static com.sxonecard.http.Constants.PAGE_PAY_METHOD;
+import static com.sxonecard.http.Constants.PAGE_PAY_SUCCESS;
 
 
 /**
@@ -125,6 +129,11 @@ public class FragmentSix extends BaseFragment {
         requestTradeStatus();
         Log.i("订单支付成功后订单轮询...", DateUtil.getCurrentDateTime());
 
+        ReChangeBean recharge = new ReChangeBean();
+        recharge.setValue(CardApplication.getInstance().getCheckCard().getCardNO(),
+                Integer.getInteger(gsonData.getRechangeFee()), System.currentTimeMillis());
+        recharge.save();
+
         mBackTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,10 +151,9 @@ public class FragmentSix extends BaseFragment {
         reChangeCardObservable.subscribe(new Action1<RechargeCardBean>() {
             @Override
             public void call(RechargeCardBean cardBean) {
-//                uploadTradeData();
                 double money = cardBean.getAmount() * 1.0 / 100;
                 DecimalFormat df = new DecimalFormat("######0.00");
-                Message msgCode = navHandle.obtainMessage(6, df.format(money));
+                Message msgCode = navHandle.obtainMessage(PAGE_PAY_SUCCESS, df.format(money));
                 msgCode.sendToTarget();
             }
         });
@@ -153,6 +161,12 @@ public class FragmentSix extends BaseFragment {
         chargeErrorObservable.subscribe(new Action1<String>() {
             @Override
             public void call(String reChangeCardJson) {
+                // TODO: 2017/12/6 保存补充值暂存信息
+                ReChangeBean recharge = new ReChangeBean();
+                recharge.setValue(CardApplication.getInstance().getCheckCard().getCardNO(),
+                        Integer.getInteger(gsonData.getRechangeFee()), System.currentTimeMillis());
+                recharge.save();
+
                 Message msgCode = navHandle.obtainMessage(400, getText(R.string.chargeError));
                 msgCode.sendToTarget();
             }
@@ -223,7 +237,7 @@ public class FragmentSix extends BaseFragment {
                 if (0 == tradeStatus.getStatus() && (endTime - startTime) < (WAIT_TIME + DELAYED_TIME) * 1000) {
                     requestTradeStatus();
                 } else if (1 == tradeStatus.getStatus()) {
-                    Log.i("订单支付成功后订单支付...", "成功");
+                    Log.i(LOG_CHANGE, "付款成功，将要给卡充值");
                     sendSuccTradeData(tradeStatus);
                 }
             }
@@ -232,7 +246,7 @@ public class FragmentSix extends BaseFragment {
             public void onError(Context context, int code, String msg) {
                 super.onError(context, code, msg);
                 cancelTimer();
-                Log.i("FragmentSix", "code:" + code + ",msg:" + msg);
+                Log.i(LOG_CHANGE, "请求后台充值交易错误 code:" + code + ",msg:" + msg);
                 Message scan = navHandle.obtainMessage(400, getText(R.string.chargeExpired));
                 scan.sendToTarget();
             }
@@ -253,6 +267,7 @@ public class FragmentSix extends BaseFragment {
             mBackTv.setVisibility(View.GONE);
             progressImg.setVisibility(View.VISIBLE);
         } else {
+            Log.i(LOG_CHANGE, "给串口发送充值命令失败");
             Message scan = navHandle.obtainMessage(400, getText(R.string.chargeError));
             scan.sendToTarget();
         }

@@ -1,13 +1,12 @@
 package com.sxonecard.ui;
 
+import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
@@ -17,19 +16,23 @@ import com.sxonecard.R;
 import com.sxonecard.base.BaseFragment;
 import com.sxonecard.base.RxBus;
 import com.sxonecard.http.SerialPort;
+import com.sxonecard.http.bean.ReChangeBean;
 import com.sxonecard.http.bean.RechargeCardBean;
+
+import org.litepal.crud.DataSupport;
 
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
 
 import butterknife.Bind;
 import rx.Observable;
 import rx.functions.Action1;
 
-import static com.sxonecard.http.Constants.isDebug;
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by HeQiang on 2017/4/22.
@@ -127,13 +130,12 @@ public class FragmentOne extends BaseFragment {
                     return;
                 }
                 if (checkCardBean.getStatus().equalsIgnoreCase("01")) {
-//                    if(!CardApplication.getInstance().isConnectNetwork()){
-//                        Toast.makeText(context, "网络异常，无法充值", Toast.LENGTH_LONG).show();
-//                        return;
-//                    }
-
                     CardApplication.getInstance().setCheckCard(checkCardBean);
                     Log.i("checkCard", "正常卡" + checkCardBean.getCardNO());
+
+                    // TODO: 2017/12/6 获取补充值暂存信息
+//                    List<ReChangeBean> all = DataSupport.findAll(ReChangeBean.class);
+
                     Message msg = new Message();
                     msg.what = 1;
                     double balance = checkCardBean.getAmount() * 1.0 / 100;

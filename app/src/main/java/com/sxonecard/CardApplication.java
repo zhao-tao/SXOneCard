@@ -1,11 +1,6 @@
 package com.sxonecard;
 
-import android.app.Application;
-import android.content.Context;
 import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.widget.Toast;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -15,10 +10,12 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.sxonecard.background.OrderDb;
-import com.sxonecard.base.CrashHandler;
 import com.sxonecard.http.bean.AdBean;
 import com.sxonecard.http.bean.RechargeCardBean;
 import com.sxonecard.http.bean.SetBean;
+
+import org.litepal.LitePalApplication;
+import org.litepal.tablemanager.Connector;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,7 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Created by HeQiang on 2017/4/22.
  */
 
-public class CardApplication extends Application {
+public class CardApplication extends LitePalApplication {
 
     public static List<AdBean> adlist = null;
     public static String nextTime;
@@ -109,8 +106,9 @@ public class CardApplication extends Application {
                 .build();
         ImageLoader.getInstance().init(configuration);
         OrderDb.init(getApplicationContext());
-        CrashHandler crashHandler = CrashHandler.getInstance();
-        crashHandler.init(this);
+        Connector.getDatabase();
+//        CrashHandler crashHandler = CrashHandler.getInstance();
+//        crashHandler.init(this);
     }
 
     public int getTimeCount() {

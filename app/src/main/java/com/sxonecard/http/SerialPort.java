@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
+import static com.sxonecard.http.Constants.LOG_CHANGE;
+
 /**
  * 串口操作类
  */
@@ -300,6 +302,7 @@ public class SerialPort {
             String byteString = ByteUtil.bytesToHexString(destBuff);
             int status = destBuff[10] & 0x0FF;
             Log.i(TAG, status == 0 ? "充值成功" : "充值失败");
+            Log.i(LOG_CHANGE, "串口返回" + (status == 0 ? "充值成功" : "充值失败"));
             if (status == 0) {
                 String balance = byteString.substring(11 * 2, 15 * 2);
                 String cardNumber = byteString.substring(19 * 2, 23 * 2);
@@ -314,7 +317,7 @@ public class SerialPort {
                 cardBean.setOrderNo(order);
                 RxBus.get().post("reChangeCard", cardBean);
             } else {
-                // TODO: 2017/11/24 充值失败后，数据库记录充值的信息
+                // TODO: 2017/12/6 写入补充值暂存信息
                 RxBus.get().post("chargeError", String.valueOf(status));
             }
         } catch (Exception e) {
