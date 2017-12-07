@@ -119,7 +119,7 @@ public class FragmentSix extends BaseFragment {
         if (changeData.isRechange()) {
 //            添加的补充值逻辑，直接跳转到支付流程
             TradeStatusBean tradeData = new TradeStatusBean();
-            tradeData.setPrice(Integer.getInteger(changeData.getRechangeFee()));
+            tradeData.setPrice(Integer.parseInt(changeData.getRechangeFee()));
             sendSuccTradeData(tradeData);
             return;
         }
@@ -139,10 +139,6 @@ public class FragmentSix extends BaseFragment {
         registerListener();
         requestTradeStatus();
         Log.i("订单支付成功后订单轮询...", DateUtil.getCurrentDateTime());
-        // TODO: 2017/12/6 测试数据库写入，待删
-        ReChangeSQL recharge = new ReChangeSQL();
-        recharge.setValue(CardApplication.getInstance().getCheckCard().getCardNO(), changeData.getRechangeFee(), System.currentTimeMillis());
-        recharge.save();
 
         mBackTv.setOnClickListener(new View.OnClickListener() {
             @Override

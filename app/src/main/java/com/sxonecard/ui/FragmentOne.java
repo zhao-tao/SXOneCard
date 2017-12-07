@@ -133,23 +133,25 @@ public class FragmentOne extends BaseFragment {
                     CardApplication.getInstance().setCheckCard(checkCardBean);
                     Log.i("checkCard", "正常卡" + checkCardBean.getCardNO());
 
-                    // TODO: 2017/12/6 获取补充值暂存信息
+                    // TODO: 2017/12/6 获取补充值暂存信息(删除过期的补充值信息，遍历卡号)
                     List<ReChangeSQL> all = DataSupport.findAll(ReChangeSQL.class);
                     if (null != all && all.size() != 0) {
+                        int index = 0;
                         for (int i = 0; i < all.size(); i++) {
                             if (System.currentTimeMillis() - all.get(i).getTime() < 30 * 1000) {
                                 if (all.get(i).getCard().equals(checkCardBean.getCardNO())) {
-                                    //写入充值信息，跳转到补充值页面
-                                    Message msg = new Message();
-                                    msg.what = PAGE_RECHANGE;
-                                    msg.obj = all.get(i).getMoney();
-                                    navHandle.sendMessage(msg);
-                                    return;
+                                    index = i;
                                 }
                             } else {
                                 DataSupport.delete(ReChangeSQL.class, i);
                             }
                         }
+                        //写入充值信息，跳转到补充值页面
+                        Message msg = new Message();
+                        msg.what = PAGE_RECHANGE;
+                        msg.obj = all.get(index).getMoney();
+                        navHandle.sendMessage(msg);
+                        return;
                     }
                     Message msg = new Message();
                     msg.what = PAGE_CHOOSE_SERVICE;
@@ -162,7 +164,6 @@ public class FragmentOne extends BaseFragment {
                     Log.i("checkCard", "无效卡");
                     handler.sendEmptyMessage(2);
                 }
-
             }
         });
     }
