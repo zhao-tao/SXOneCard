@@ -38,6 +38,8 @@ public class SerialPort {
     private int baudrate = 115200;
     //串口开关
     private boolean isStop = false;
+    //是否连接成功
+    private boolean isConnect = false;
 
     public static SerialPort getInstance() {
         if (null == portUtil) {
@@ -145,7 +147,10 @@ public class SerialPort {
         String temp = ByteUtil.bytesToAscii(srcBuffer, 12, 12);
         // TODO: 2017/11/21 给IMEI赋值，根据IMid请求默认广告的地址保存到本地，并显示
         CardApplication.IMEI = temp;
-        RxBus.get().post("ads", "init_default");
+        if (!isConnect) {
+            RxBus.get().post("ads", "init_default");
+            isConnect = true;
+        }
         byte[] moduleCheckByte = moduleCheck();
         sendBuffer(moduleCheckByte);
     }
