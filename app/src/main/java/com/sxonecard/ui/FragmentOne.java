@@ -136,14 +136,18 @@ public class FragmentOne extends BaseFragment {
                     // TODO: 2017/12/6 获取补充值暂存信息
                     List<ReChangeSQL> all = DataSupport.findAll(ReChangeSQL.class);
                     if (null != all && all.size() != 0) {
-                        for (ReChangeSQL bean : all) {
-                            if (bean.getCard().equals(checkCardBean.getCardNO())) {
-                                //写入充值信息，跳转到补充值页面
-                                Message msg = new Message();
-                                msg.what = PAGE_RECHANGE;
-                                msg.obj = bean.getMoney();
-                                navHandle.sendMessage(msg);
-                                return;
+                        for (int i = 0; i < all.size(); i++) {
+                            if (System.currentTimeMillis() - all.get(i).getTime() < 30 * 1000) {
+                                if (all.get(i).getCard().equals(checkCardBean.getCardNO())) {
+                                    //写入充值信息，跳转到补充值页面
+                                    Message msg = new Message();
+                                    msg.what = PAGE_RECHANGE;
+                                    msg.obj = all.get(i).getMoney();
+                                    navHandle.sendMessage(msg);
+                                    return;
+                                }
+                            } else {
+                                DataSupport.delete(ReChangeSQL.class, i);
                             }
                         }
                     }

@@ -93,13 +93,13 @@ public class CardActivity extends FragmentActivity {
     //    是否全屏显示
     private boolean isFullScreen = false;
 
-    //    定时关机
+    //    TODO:定时关机
     private Handler deviceHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
-                    SerialPort.getInstance().deviceShutDown();
+//                    SerialPort.getInstance().deviceShutDown();
                     break;
             }
         }
