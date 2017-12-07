@@ -77,6 +77,7 @@ public class FragmentSix extends BaseFragment {
     private static final int WAIT_TIME = 60;
     //    倒计时完成后，等待结果返回的时间
     private static final int DELAYED_TIME = 1;
+    //    扫二维码期间请求到的订单状态0失败,1为成功
     private int transactionStatus = 0;
     Observable<RechargeCardBean> reChangeCardObservable;
     Observable<String> chargeErrorObservable;
@@ -199,6 +200,9 @@ public class FragmentSix extends BaseFragment {
         timer.start();
     }
 
+    /**
+     * 如果二维码倒计时结束,隐藏倒计时时间,用1秒处理获取的订单结果
+     */
     private void checkPayResult() {
         delayTimer = new MyCountDownTimer(DELAYED_TIME * 1000, 1000) {
             @Override
