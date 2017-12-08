@@ -155,8 +155,6 @@ public class FragmentOne extends BaseFragment {
                             Message msg = new Message();
                             msg.what = PAGE_RECHANGE;
                             msg.obj = all.get(index).getMoney();
-                            //删除本条补充值记录
-                            DataSupport.deleteAll(ReChangeSQL.class, "card=?", all.get(index).getCard());
                             navHandle.sendMessage(msg);
                             return;
                         }

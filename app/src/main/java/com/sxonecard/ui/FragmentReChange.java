@@ -5,14 +5,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.sxonecard.CardApplication;
 import com.sxonecard.R;
 import com.sxonecard.base.BaseFragment;
 import com.sxonecard.http.bean.ChangeData;
 import com.sxonecard.http.bean.ReChangeSQL;
 
 import org.litepal.crud.DataSupport;
-
-import java.util.List;
 
 import butterknife.Bind;
 
@@ -62,7 +61,8 @@ public class FragmentReChange extends BaseFragment {
     private void initListener() {
         tvReChange.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {//删除本条补充值记录
+//                DataSupport.deleteAll(ReChangeSQL.class, "card=?", CardApplication.getInstance().getCheckCard().getCardNO());
                 Message msgCode = Message.obtain();
                 ChangeData changeData = new ChangeData();
                 changeData.setRechangeFee(msg);
@@ -77,6 +77,7 @@ public class FragmentReChange extends BaseFragment {
         tvReFund.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                DataSupport.deleteAll(ReChangeSQL.class, "card=?", CardApplication.getInstance().getCheckCard().getCardNO());
                 navHandle.sendEmptyMessage(PAGE_CHECK_CARD);
             }
         });
