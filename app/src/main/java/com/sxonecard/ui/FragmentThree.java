@@ -22,6 +22,7 @@ import java.util.List;
 
 import butterknife.Bind;
 
+import static com.sxonecard.http.Constants.PAGE_PAY_METHOD;
 import static com.sxonecard.http.Constants.isDebug;
 
 /**
@@ -70,7 +71,7 @@ public class FragmentThree extends BaseFragment {
                 int price = prices.get(position);
                 Message msgPrice = Message.obtain();
                 msgPrice.obj = isDebug ? 1 : price;
-                msgPrice.what = 4;
+                msgPrice.what = PAGE_PAY_METHOD;
                 navHandle.sendMessage(msgPrice);
             }
         });

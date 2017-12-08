@@ -48,6 +48,7 @@ import rx.functions.Action1;
 import static com.sxonecard.http.Constants.LOG_CHANGE;
 import static com.sxonecard.http.Constants.PAGE_PAY_METHOD;
 import static com.sxonecard.http.Constants.PAGE_PAY_SUCCESS;
+import static com.sxonecard.http.Constants.isRechange;
 
 
 /**
@@ -117,10 +118,11 @@ public class FragmentSix extends BaseFragment {
         changeData = gson.fromJson(msgArrag, ChangeData.class);
 
 //        判断是正常充值还是补充值
-        if (changeData.isRechange()) {
+        if (isRechange) {
 //            添加的补充值逻辑，直接跳转到支付流程
             TradeStatusBean tradeData = new TradeStatusBean();
-            tradeData.setPrice(Integer.parseInt(changeData.getRechangeFee()));
+            tradeData.setPrice(Integer.parseInt(changeData.getRechangeFee()) * 100);
+            registerListener();
             sendSuccTradeData(tradeData);
             return;
         }
@@ -171,7 +173,7 @@ public class FragmentSix extends BaseFragment {
                 // TODO: 2017/12/6 保存补充值暂存信息
                 ReChangeSQL recharge = new ReChangeSQL();
                 recharge.setValue(CardApplication.getInstance().getCheckCard().getCardNO(),
-                        changeData.getRechangeFee(), System.currentTimeMillis());
+                        changeData.getRechangeFee(), CardApplication.getInstance().getCurrentOrderId(), System.currentTimeMillis());
                 recharge.save();
 
                 Message msgCode = navHandle.obtainMessage(400, getText(R.string.chargeError));

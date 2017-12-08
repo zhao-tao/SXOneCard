@@ -136,22 +136,31 @@ public class FragmentOne extends BaseFragment {
                     // TODO: 2017/12/6 获取补充值暂存信息(删除过期的补充值信息，遍历卡号)
                     List<ReChangeSQL> all = DataSupport.findAll(ReChangeSQL.class);
                     if (null != all && all.size() != 0) {
-                        int index = 0;
+                        int index = -1;
                         for (int i = 0; i < all.size(); i++) {
-                            if (System.currentTimeMillis() - all.get(i).getTime() < 30 * 1000) {
+//                            判断30分钟以上的失败交易,补充值过期删除记录
+                            if (System.currentTimeMillis() - all.get(i).getTime() < 1800 * 1000) {
                                 if (all.get(i).getCard().equals(checkCardBean.getCardNO())) {
                                     index = i;
                                 }
                             } else {
-                                DataSupport.delete(ReChangeSQL.class, i);
+                                DataSupport.deleteAll(ReChangeSQL.class, "card=?", all.get(i).getCard());
                             }
                         }
-                        //写入充值信息，跳转到补充值页面
-                        Message msg = new Message();
-                        msg.what = PAGE_RECHANGE;
-                        msg.obj = all.get(index).getMoney();
-                        navHandle.sendMessage(msg);
-                        return;
+                        if (index != -1) {
+                            //修改当前交易订单号
+                            CardApplication.getInstance().setCurrentOrderId(all.get(index).getOrderId());
+
+                            //写入充值信息，跳转到补充值页面
+                            Message msg = new Message();
+                            msg.what = PAGE_RECHANGE;
+                            msg.obj = all.get(index).getMoney();
+                            //删除本条补充值记录
+                            DataSupport.deleteAll(ReChangeSQL.class, "card=?", all.get(index).getCard());
+                            navHandle.sendMessage(msg);
+                            return;
+                        }
+
                     }
                     Message msg = new Message();
                     msg.what = PAGE_CHOOSE_SERVICE;

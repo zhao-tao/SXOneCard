@@ -2,7 +2,7 @@ package com.sxonecard.http;
 
 
 import com.sxonecard.http.bean.AdResult;
-import com.sxonecard.http.bean.AlipayBean;
+import com.sxonecard.http.bean.PayBean;
 import com.sxonecard.http.bean.SetBean;
 import com.sxonecard.http.bean.ShutDownBean;
 import com.sxonecard.http.bean.TradeStatusBean;
@@ -36,10 +36,10 @@ public interface HttpDataService {
 
 
     @GET("api/scancode.php")
-    Observable<HttpResult<AlipayBean>> requestAlipayForString(@QueryMap Map<String, String> mapParam);
+    Observable<HttpResult<PayBean>> requestAlipayForString(@QueryMap Map<String, String> mapParam);
 
     @GET("api/scancode.php")
-    Observable<HttpResult<AlipayBean>> requestWeiXinForString(@QueryMap Map<String, String> mapParam);
+    Observable<HttpResult<PayBean>> requestWeiXinForString(@QueryMap Map<String, String> mapParam);
 
     @FormUrlEncoded
     @POST("api/index.php?Act=run")

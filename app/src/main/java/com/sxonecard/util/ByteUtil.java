@@ -179,4 +179,14 @@ public class ByteUtil {
         }
         return asciiStr;
     }
+
+    /**
+     * 卡号不足8位，补零
+     * @param code
+     * @param num
+     * @return
+     */
+    public static String autoGenericCode(int code, int num) {
+        return String.format("%0" + num + "d", code);
+    }
 }

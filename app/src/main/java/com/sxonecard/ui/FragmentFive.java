@@ -18,8 +18,8 @@ import com.sxonecard.http.DateUtil;
 import com.sxonecard.http.HttpDataListener;
 import com.sxonecard.http.HttpDataSubscriber;
 import com.sxonecard.http.HttpRequestProxy;
-import com.sxonecard.http.bean.AlipayBean;
 import com.sxonecard.http.bean.ChangeData;
+import com.sxonecard.http.bean.PayBean;
 import com.sxonecard.util.EncryptUtil;
 
 import java.util.HashMap;
@@ -106,9 +106,9 @@ public class FragmentFive extends BaseFragment {
 
     private void sendWeixinData() {
         progressDialog.show();
-        HttpDataListener listener = new HttpDataListener<AlipayBean>() {
+        HttpDataListener listener = new HttpDataListener<PayBean>() {
             @Override
-            public void onNext(AlipayBean alipayBean) {
+            public void onNext(PayBean alipayBean) {
                 progressDialog.dismiss();
                 if (TextUtils.isEmpty(alipayBean.getQrCodeString())) {
                     weixinPay.setEnabled(true);
@@ -144,7 +144,7 @@ public class FragmentFive extends BaseFragment {
         String time = DateUtil.getCurrentTime();
         String fee = rechagePrice;
         String md5Code = EncryptUtil.getMd5(act + fee + imeiId + time).toUpperCase();
-        Map<String, String> paramMap = new HashMap<String, String>(5);
+        Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("Act", act);
         paramMap.put("Time", time);
         paramMap.put("Fee", fee);
@@ -154,15 +154,15 @@ public class FragmentFive extends BaseFragment {
         paramMap.put("ImeiId", imeiId);
         paramMap.put("Md5Code", md5Code);
 
-        HttpRequestProxy.getInstance().requestWeiXinString(new HttpDataSubscriber<AlipayBean>(listener,
+        HttpRequestProxy.getInstance().requestWeiXinString(new HttpDataSubscriber<PayBean>(listener,
                 getContext(), false), paramMap);
     }
 
     private void sendAlipayData() {
         progressDialog.show();
-        HttpDataListener alipayListener = new HttpDataListener<AlipayBean>() {
+        HttpDataListener alipayListener = new HttpDataListener<PayBean>() {
             @Override
-            public void onNext(AlipayBean alipayBean) {
+            public void onNext(PayBean alipayBean) {
                 progressDialog.dismiss();
                 if (TextUtils.isEmpty(alipayBean.getQrCodeString())) {
                     weixinPay.setEnabled(true);
@@ -197,7 +197,7 @@ public class FragmentFive extends BaseFragment {
         String time = DateUtil.getCurrentTime();
         String fee = rechagePrice;
         String md5Code = EncryptUtil.getMd5(act + fee + imeiId + time).toUpperCase();
-        Map<String, String> paramMap = new HashMap<String, String>(5);
+        Map<String, String> paramMap = new HashMap<String, String>();
         paramMap.put("Act", act);
         paramMap.put("Time", time);
         paramMap.put("Fee", fee);
@@ -206,7 +206,7 @@ public class FragmentFive extends BaseFragment {
         paramMap.put("CardNo", CardApplication.getInstance().getCheckCard().getCardNO());
         paramMap.put("Md5Code", md5Code);
 
-        HttpRequestProxy.getInstance().requestAlipayString(new HttpDataSubscriber<AlipayBean>
+        HttpRequestProxy.getInstance().requestAlipayString(new HttpDataSubscriber<PayBean>
                 (alipayListener, getContext(), false), paramMap);
     }
 

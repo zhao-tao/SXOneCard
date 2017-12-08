@@ -10,12 +10,23 @@ import org.litepal.crud.DataSupport;
 public class ReChangeSQL extends DataSupport {
     private String card;
     private String money;
+    //当前订单编号
+    private String OrderId;
     private long time;
 
-    public void setValue(String card, String money, long time) {
+    public void setValue(String card, String money, String OrderId, long time) {
         this.card = card;
         this.money = money;
+        this.OrderId = OrderId;
         this.time = time;
+    }
+
+    public String getOrderId() {
+        return OrderId;
+    }
+
+    public void setOrderId(String orderId) {
+        OrderId = orderId;
     }
 
     public String getCard() {

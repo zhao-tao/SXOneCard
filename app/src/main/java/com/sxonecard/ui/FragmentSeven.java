@@ -96,19 +96,21 @@ public class FragmentSeven extends BaseFragment {
                 OrderDb.insert(gson.toJson(jsonObj));
             }
         };
-        jsonObj.put("Type", String.valueOf(1000));
+
         jsonObj.put("LiushuiId", String.valueOf(System.currentTimeMillis()));
-        jsonObj.put("OrderId", CardApplication.getInstance().getCurrentOrderId());
-        jsonObj.put("CardNo", CardApplication.getInstance().getCheckCard().getCardNO() + "");
         jsonObj.put("Time", DateTools.getCurrent());
+        jsonObj.put("ImeiId", CardApplication.IMEI);
+        jsonObj.put("Type", String.valueOf(1000));
         jsonObj.put("Operator", "tom");
         jsonObj.put("ReaderSn", "111");
         jsonObj.put("ReaderVer", "111");
         jsonObj.put("CorpCode", "111");
         jsonObj.put("MerchantSn", "1111");
-        jsonObj.put("ImeiId", CardApplication.IMEI);
         jsonObj.put("TradeData", "111");
         jsonObj.put("OrderType", "1");
+
+        jsonObj.put("OrderId", CardApplication.getInstance().getCurrentOrderId());
+        jsonObj.put("CardNo", CardApplication.getInstance().getCheckCard().getCardNO() + "");
         jsonObj.put("mCardType", CardApplication.getInstance().getCheckCard().getType());
 //        充值前金额
         jsonObj.put("oldMoney", String.valueOf(a_money));

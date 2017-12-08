@@ -65,6 +65,7 @@ import static com.sxonecard.http.Constants.PAGE_QR_CODE;
 import static com.sxonecard.http.Constants.PAGE_RECHANGE;
 import static com.sxonecard.http.Constants.PAGE_RECHANGE_ERROR;
 import static com.sxonecard.http.Constants.isDebug;
+import static com.sxonecard.http.Constants.isRechange;
 
 /**
  * @Author
@@ -413,6 +414,7 @@ public class CardActivity extends FragmentActivity {
                 fragment = new FragmentOne();
                 break;
             case PAGE_CHOOSE_SERVICE:
+                isRechange = false;
                 fragment = new FragmentTwo();
                 break;
             case PAGE_CHOOSE_MONEY:
@@ -431,6 +433,7 @@ public class CardActivity extends FragmentActivity {
                 fragment = new FragmentSeven();
                 break;
             case PAGE_RECHANGE:
+                isRechange = true;
                 fragment = new FragmentReChange();
                 break;
             case PAGE_RECHANGE_ERROR:

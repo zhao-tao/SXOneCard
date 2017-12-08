@@ -65,7 +65,6 @@ public class FragmentReChange extends BaseFragment {
             public void onClick(View v) {
                 Message msgCode = Message.obtain();
                 ChangeData changeData = new ChangeData();
-                changeData.setRechange(true);
                 changeData.setRechangeFee(msg);
                 // 利用gson对象生成json字符串
                 Gson gson = new Gson();

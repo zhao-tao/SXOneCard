@@ -10,6 +10,9 @@ public class Constants {
     public static String BASEURL = "http://pay.thecitypass.cn/";
     // public static String BASEURL = "http://www.bjilvy.cn/";
 
+    //是否为补充值
+    public static boolean isRechange = false;
+
     //    页面常量
     public static final int PAGE_CHECK_CARD = 0;
     public static final int PAGE_CHOOSE_SERVICE = 1;

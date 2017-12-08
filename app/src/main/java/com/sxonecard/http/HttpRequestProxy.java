@@ -1,21 +1,17 @@
 package com.sxonecard.http;
 
 import com.sxonecard.http.bean.AdResult;
-import com.sxonecard.http.bean.AlipayBean;
+import com.sxonecard.http.bean.PayBean;
 import com.sxonecard.http.bean.SetBean;
 import com.sxonecard.http.bean.ShutDownBean;
 import com.sxonecard.http.bean.TradeStatusBean;
 import com.sxonecard.util.LogInterceptor;
 
-import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -105,13 +101,13 @@ public class HttpRequestProxy {
         private static final HttpRequestProxy INSTANCE = new HttpRequestProxy();
     }
 
-    public void requestAlipayString(Subscriber<AlipayBean> subscriber, Map<String, String> mapParam) {
-        Observable observable = dataService.requestAlipayForString(mapParam).map(new HttpResultFunc<AlipayBean>());
+    public void requestAlipayString(Subscriber<PayBean> subscriber, Map<String, String> mapParam) {
+        Observable observable = dataService.requestAlipayForString(mapParam).map(new HttpResultFunc<PayBean>());
         toSubscribe(observable, subscriber);
     }
 
-    public void requestWeiXinString(Subscriber<AlipayBean> subscriber, Map<String, String> mapParam) {
-        Observable observable = dataService.requestWeiXinForString(mapParam).map(new HttpResultFunc<AlipayBean>());
+    public void requestWeiXinString(Subscriber<PayBean> subscriber, Map<String, String> mapParam) {
+        Observable observable = dataService.requestWeiXinForString(mapParam).map(new HttpResultFunc<PayBean>());
         toSubscribe(observable, subscriber);
     }
 

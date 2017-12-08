@@ -4,8 +4,7 @@ package com.sxonecard.http.bean;
  * Created by pc on 2017-04-27.
  */
 
-public class AlipayBean
-{
+public class PayBean {
     /**
      * 二维码字符串.
      */

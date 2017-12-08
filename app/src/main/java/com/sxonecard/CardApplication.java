@@ -1,6 +1,5 @@
 package com.sxonecard;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -15,9 +14,7 @@ import com.sxonecard.http.bean.AdBean;
 import com.sxonecard.http.bean.RechargeCardBean;
 import com.sxonecard.http.bean.SetBean;
 
-import org.litepal.LitePal;
 import org.litepal.LitePalApplication;
-import org.litepal.tablemanager.Connector;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,10 +28,13 @@ public class CardApplication extends LitePalApplication {
     public static List<AdBean> adlist = null;
     public static String nextTime;
     public static int index = 0;
+    //    以下值需要交易时提交到后台
     //    公交卡信息
     public RechargeCardBean checkCard;
     //    当前订单id
     private String currentOrderId;
+
+
     //    首次请求获取的配置
     private SetBean config;
     //    IMEI在接收到串口信息，并连接成功后，从串口获取赋值

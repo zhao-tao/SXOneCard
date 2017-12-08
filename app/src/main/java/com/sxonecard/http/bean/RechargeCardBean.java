@@ -1,20 +1,25 @@
 package com.sxonecard.http.bean;
 
+import com.sxonecard.util.ByteUtil;
+
 /**
  * Created by pc on 2017-06-19.
  */
 
 public class RechargeCardBean {
-    private String cardNumber;//16进制卡号
     private String cardNO;//10进制卡号
     private int amount;//卡内金额(单位：分)
     private String expireDate; //过期日期
     private String type;    //卡类型
     private String orderNo;//订单号.
+
+    private String status; //运行状态  0运行异常  1运行正常.
+
+
+    //当前未使用的参数
+    private String note; //异常备注,Status为0时备注异常问题.
     //    private String reChangeTime;// 充值日期.
 //    private String imeiId;//设备IMEI号.
-    private String status; //运行状态  0运行异常  1运行正常.
-    private String note; //异常备注,Status为0时备注异常问题.
 
     public RechargeCardBean() {
 
@@ -22,25 +27,20 @@ public class RechargeCardBean {
 
     public RechargeCardBean(String cardNumber, int amount,
                             String expireDate, String type, String status) {
-        this.cardNumber = cardNumber;
         this.amount = amount;
         this.expireDate = expireDate;
         this.type = type;
         this.status = status;
-        cardNO = autoGenericCode(Integer.parseInt(cardNumber, 16), 8);
+        cardNO = ByteUtil.autoGenericCode(Integer.parseInt(cardNumber, 16), 8);
     }
 
-    public String getCardNumber() {
-        return cardNumber;
-    }
 
     public String getCardNO() {
         return cardNO;
     }
 
     public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
-        cardNO = autoGenericCode(Integer.parseInt(cardNumber, 16), 8);
+        cardNO = ByteUtil.autoGenericCode(Integer.parseInt(cardNumber, 16), 8);
     }
 
     public int getAmount() {
@@ -59,15 +59,7 @@ public class RechargeCardBean {
         this.orderNo = orderNo;
     }
 
-    /**
-     * 卡号不足8位，补零
-     * @param code
-     * @param num
-     * @return
-     */
-    private String autoGenericCode(int code, int num) {
-        return String.format("%0" + num + "d", code);
-    }
+
 
 //    public String getReChangeTime() {
 //        return reChangeTime;
