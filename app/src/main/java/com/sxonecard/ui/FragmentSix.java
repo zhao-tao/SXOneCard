@@ -35,6 +35,7 @@ import com.sxonecard.http.bean.ChangeData;
 import com.sxonecard.http.bean.ReChangeSQL;
 import com.sxonecard.http.bean.RechargeCardBean;
 import com.sxonecard.http.bean.TradeStatusBean;
+import com.sxonecard.util.DateTools;
 import com.sxonecard.util.EncryptUtil;
 
 import java.text.DecimalFormat;
@@ -45,6 +46,7 @@ import butterknife.Bind;
 import rx.Observable;
 import rx.functions.Action1;
 
+import static com.sxonecard.CardApplication.a_money;
 import static com.sxonecard.http.Constants.LOG_CHANGE;
 import static com.sxonecard.http.Constants.PAGE_PAY_METHOD;
 import static com.sxonecard.http.Constants.PAGE_PAY_SUCCESS;
@@ -175,11 +177,50 @@ public class FragmentSix extends BaseFragment {
                 recharge.setValue(CardApplication.getInstance().getCheckCard().getCardNO(),
                         changeData.getRechangeFee(), CardApplication.getInstance().getCurrentOrderId(), System.currentTimeMillis());
                 recharge.save();
-
+                uploadFailData();
                 Message msgCode = navHandle.obtainMessage(400, getText(R.string.chargeError));
                 msgCode.sendToTarget();
             }
         });
+    }
+
+    /**
+     * 上传交易失败数据.
+     */
+    private void uploadFailData() {
+        final Map<String, String> jsonObj = new HashMap<>();
+        HttpDataListener tradeListener = new HttpDataListener<String>() {
+            @Override
+            public void onNext(String tradeStatusBean) {
+
+            }
+
+            @Override
+            public void onError(Context context, int code, String msg) {
+                super.onError(context, code, msg);
+                uploadFailData();
+            }
+        };
+
+        jsonObj.put("LiushuiId", String.valueOf(System.currentTimeMillis()));
+        jsonObj.put("Time", DateTools.getCurrent());
+        jsonObj.put("ImeiId", CardApplication.IMEI);
+        jsonObj.put("Type", String.valueOf(1000));
+        jsonObj.put("Operator", "tom");
+        jsonObj.put("ReaderSn", "111");
+        jsonObj.put("ReaderVer", "111");
+        jsonObj.put("CorpCode", "111");
+        jsonObj.put("MerchantSn", "1111");
+        jsonObj.put("TradeData", "111");
+        jsonObj.put("OrderType", "1");
+
+        jsonObj.put("OrderId", CardApplication.getInstance().getCurrentOrderId());
+        jsonObj.put("CardNo", CardApplication.getInstance().getCheckCard().getCardNO() + "");
+        jsonObj.put("mCardType", CardApplication.getInstance().getCheckCard().getType());
+//        充值前金额
+        jsonObj.put("oldMoney", String.valueOf(a_money));
+        HttpRequestProxy.getInstance().failTrade(new HttpDataSubscriber(tradeListener,
+                getContext(), false), jsonObj);
     }
 
     private void waitingStatus() {

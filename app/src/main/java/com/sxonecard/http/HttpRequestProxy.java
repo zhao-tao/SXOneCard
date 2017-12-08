@@ -96,6 +96,11 @@ public class HttpRequestProxy {
         toSubscribe(observable, subscriber);
     }
 
+    public void failTrade(Subscriber<String> subscriber, Map<String, String> param) {
+        Observable observable = dataService.failTrade(param).map(new HttpResultFunc<String>());
+        toSubscribe(observable, subscriber);
+    }
+
     //在访问HttpMethods时创建单例
     private static class SingletonHolder {
         private static final HttpRequestProxy INSTANCE = new HttpRequestProxy();

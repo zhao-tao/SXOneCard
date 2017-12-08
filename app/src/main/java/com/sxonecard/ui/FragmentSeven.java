@@ -69,6 +69,7 @@ public class FragmentSeven extends BaseFragment {
                 PrinterUtil.getInstance().send();
             }
         });
+
         uploadTradeData();
         mBackTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +95,7 @@ public class FragmentSeven extends BaseFragment {
                 super.onError(context, code, msg);
                 Gson gson = new Gson();
                 OrderDb.insert(gson.toJson(jsonObj));
+                uploadTradeData();
             }
         };
 

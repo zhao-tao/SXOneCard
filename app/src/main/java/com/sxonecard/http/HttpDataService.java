@@ -34,6 +34,10 @@ public interface HttpDataService {
     @POST("api/index.php")
     Observable<HttpResult<String>> uploadTrade(@FieldMap Map<String, String> param);
 
+    @FormUrlEncoded
+    @POST("api/failtrade.php")
+    Observable<HttpResult<String>> failTrade(@FieldMap Map<String, String> param);
+
 
     @GET("api/scancode.php")
     Observable<HttpResult<PayBean>> requestAlipayForString(@QueryMap Map<String, String> mapParam);

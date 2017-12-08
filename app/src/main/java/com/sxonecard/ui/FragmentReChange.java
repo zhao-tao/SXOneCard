@@ -62,7 +62,7 @@ public class FragmentReChange extends BaseFragment {
         tvReChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//删除本条补充值记录
-//                DataSupport.deleteAll(ReChangeSQL.class, "card=?", CardApplication.getInstance().getCheckCard().getCardNO());
+                DataSupport.deleteAll(ReChangeSQL.class, "card=?", CardApplication.getInstance().getCheckCard().getCardNO());
                 Message msgCode = Message.obtain();
                 ChangeData changeData = new ChangeData();
                 changeData.setRechangeFee(msg);
@@ -77,7 +77,7 @@ public class FragmentReChange extends BaseFragment {
         tvReFund.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                DataSupport.deleteAll(ReChangeSQL.class, "card=?", CardApplication.getInstance().getCheckCard().getCardNO());
+                DataSupport.deleteAll(ReChangeSQL.class, "card=?", CardApplication.getInstance().getCheckCard().getCardNO());
                 navHandle.sendEmptyMessage(PAGE_CHECK_CARD);
             }
         });
