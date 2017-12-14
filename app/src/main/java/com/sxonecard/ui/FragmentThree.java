@@ -70,7 +70,7 @@ public class FragmentThree extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int price = prices.get(position);
                 Message msgPrice = Message.obtain();
-                msgPrice.obj = isDebug ? 1 : price;
+                msgPrice.obj = isDebug ? price / 10 : price;
                 msgPrice.what = PAGE_PAY_METHOD;
                 navHandle.sendMessage(msgPrice);
             }

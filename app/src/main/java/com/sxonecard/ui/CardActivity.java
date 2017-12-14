@@ -10,18 +10,21 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.mobstat.SendStrategyEnum;
@@ -44,7 +47,6 @@ import com.sxonecard.util.DownLoadFile;
 import com.sxonecard.util.LogcatHelper;
 import com.sxonecard.util.PrinterTestUtil;
 
-import java.io.DataOutputStream;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Timer;
@@ -82,6 +84,8 @@ public class CardActivity extends FragmentActivity {
     Button btnExit;
     @Bind(R.id.btn_print)
     Button btnPrint;
+    @Bind(R.id.full_bottom)
+    View btnFull;
 
     final Handler navHandler = new NavigationHandler(this);
     final Handler navHandler_gg = new NavigationHandler(this);
@@ -92,8 +96,7 @@ public class CardActivity extends FragmentActivity {
     private String curr_ads = "";
     private int current_fragment = 0;
 
-    //    是否全屏显示
-    private boolean isFullScreen = false;
+    long[] mHits = new long[5];
 
     //    TODO:定时关机
     private Handler deviceHandler = new Handler() {
@@ -106,6 +109,7 @@ public class CardActivity extends FragmentActivity {
             }
         }
     };
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -123,19 +127,17 @@ public class CardActivity extends FragmentActivity {
 //                .start(getApplicationContext());
 
         setContentView(R.layout.activity_card);
+        sendBroadcast(new Intent("com.jld.action.hideSystemUI"));
         ButterKnife.bind(this);
         initView();
         registerBus();
         initDevice();
         setListener();
         if (isDebug) {
-            isFullScreen = false;
             ivLogo.setVisibility(View.GONE);
         } else {
-            isFullScreen = true;
             llTest.setVisibility(View.GONE);
         }
-//        setFullScreen(isFullScreen);
         // FIXME: 2017/11/17 本地记录特定的Log日志文件
         LogcatHelper.getInstance().start();
     }
@@ -153,30 +155,59 @@ public class CardActivity extends FragmentActivity {
             public void onClick(View v) {
 //                测试打印小票
                 PrinterTestUtil.getInstance().send();
+
+//                sendBroadcast(new Intent("com.jld.action.hideSystemUI"));
+//                sendBroadcast(new Intent("com.jld.action.displaySystemUI"));
             }
         });
 
         ivLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                setFullScreen(isFullScreen);
             }
         });
-    }
 
-    public void setFullScreen(boolean isFullScreen) {
+        btnFull.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //每点击一次 实现左移一格数据
+                System.arraycopy(mHits, 1, mHits, 0, mHits.length - 1);
+                //给数组的最后赋当前时钟值
+                mHits[mHits.length - 1] = SystemClock.uptimeMillis();
+                //当0出的值大于当前时间-500时  证明在500秒内点击了3次
+                if (mHits[0] > SystemClock.uptimeMillis() - 1000) {
+                    showExitDialog();
+                }
+            }
 
-        //隐藏导航栏，并且点击不出现
-        Window window = getWindow();
-        WindowManager.LayoutParams attributes = window.getAttributes();
-        if (isFullScreen) {
-            //设置为非全屏
-            attributes.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE;
-        } else {
-            //设置为全屏(隐藏状态栏和导航栏，禁止状态栏下拉和导航栏点击出现)
-            attributes.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE;
-        }
-        window.setAttributes(attributes);
+            private void showExitDialog() {
+                final EditText editText = new EditText(CardActivity.this);
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                AlertDialog.Builder builder = new AlertDialog.Builder(CardActivity.this);
+                builder.setView(editText);
+                dialog = builder.show();
+                editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (editText.getText().toString().equals("111")) {
+                            sendBroadcast(new Intent("com.jld.action.displaySystemUI"));
+                            System.exit(0);
+                        } else {
+                            dialog.dismiss();
+                        }
+                        return true;
+                    }
+                });
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                    }
+                }, 3000);
+            }
+        });
     }
 
     /**
@@ -535,14 +566,14 @@ public class CardActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE //声明页面内容不会随着导航栏和状态栏变化
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION //初始化时默认导航栏已隐藏
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN //初始化时默认状态栏导航栏都已隐藏
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY //显示状态栏和导航栏后，延时自动隐藏
-        );
+//        getWindow().getDecorView().setSystemUiVisibility(
+//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE //声明页面内容不会随着导航栏和状态栏变化
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION //初始化时默认导航栏已隐藏
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN //初始化时默认状态栏导航栏都已隐藏
+//                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+//                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+//                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY //显示状态栏和导航栏后，延时自动隐藏
+//        );
     }
 
     @Override

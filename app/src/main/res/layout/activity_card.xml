@@ -23,6 +23,19 @@
             android:layout_height="match_parent"
             android:background="@color/background" />
 
+        <View
+            android:id="@+id/full_top"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true" />
+
+        <View
+            android:id="@+id/full_bottom"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true" />
+
     </RelativeLayout>
 
 
