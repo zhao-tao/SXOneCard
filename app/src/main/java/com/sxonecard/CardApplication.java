@@ -10,6 +10,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.sxonecard.background.OrderDb;
+import com.sxonecard.base.CrashHandler;
 import com.sxonecard.http.bean.AdBean;
 import com.sxonecard.http.bean.RechargeCardBean;
 import com.sxonecard.http.bean.SetBean;
@@ -106,8 +107,8 @@ public class CardApplication extends LitePalApplication {
                 .build();
         ImageLoader.getInstance().init(configuration);
         OrderDb.init(getApplicationContext());
-//        CrashHandler crashHandler = CrashHandler.getInstance();
-//        crashHandler.init(this);
+        CrashHandler crashHandler = CrashHandler.getInstance();
+        crashHandler.init(this);
     }
 
     public int getTimeCount() {

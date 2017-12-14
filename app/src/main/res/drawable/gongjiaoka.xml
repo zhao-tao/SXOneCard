@@ -3,20 +3,39 @@
     android:oneshot="false">
     <item
         android:drawable="@drawable/gongjiaoka1"
-        android:duration="200" />
+        android:duration="150" />
     <item
         android:drawable="@drawable/gongjiaoka2"
-        android:duration="200" />
+        android:duration="150" />
     <item
         android:drawable="@drawable/gongjiaoka3"
-        android:duration="200" />
+        android:duration="150" />
     <item
         android:drawable="@drawable/gongjiaoka4"
-        android:duration="200" />
+        android:duration="150" />
     <item
         android:drawable="@drawable/gongjiaoka5"
-        android:duration="200" />
+        android:duration="150" />
     <item
         android:drawable="@drawable/gongjiaoka6"
-        android:duration="200" />
+        android:duration="150" />
+
+    <item
+        android:drawable="@drawable/gongjiaoka7"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/gongjiaoka8"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/gongjiaoka9"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/gongjiaoka10"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/gongjiaoka11"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/gongjiaoka12"
+        android:duration="150" />
 </animation-list>

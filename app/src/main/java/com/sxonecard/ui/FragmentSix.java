@@ -74,12 +74,15 @@ public class FragmentSix extends BaseFragment {
 
     private String imeiId;
     private String orderId;
+    //刚进入页面的时间
     private long startTime;
+    //    是否在有效的订单轮询时间（60s倒计时+2秒延迟容错）
+    private boolean isRefreshStatus = true;
     private MyCountDownTimer timer;
     private MyCountDownTimer delayTimer;
     private static final int WAIT_TIME = 60;
     //    倒计时完成后，等待结果返回的时间
-    private static final int DELAYED_TIME = 1;
+    private static final int DELAYED_TIME = 5;
     //    扫二维码期间请求到的订单状态0失败,1为成功
     private int transactionStatus = 0;
     Observable<RechargeCardBean> reChangeCardObservable;
@@ -280,6 +283,7 @@ public class FragmentSix extends BaseFragment {
         HttpDataListener listener = new HttpDataListener<TradeStatusBean>() {
             @Override
             public void onNext(TradeStatusBean tradeStatus) {
+//                接收到返回数据的时间
                 long endTime = System.currentTimeMillis();
                 if (BuildConfig.AUTO_TEST) {
                     if ((endTime - startTime) > 5000) {
@@ -287,8 +291,12 @@ public class FragmentSix extends BaseFragment {
                     }
                 }
                 transactionStatus = tradeStatus.getStatus();
-                if (0 == tradeStatus.getStatus() && (endTime - startTime) < (WAIT_TIME + DELAYED_TIME) * 1000) {
-                    requestTradeStatus();
+                if (0 == tradeStatus.getStatus()) {
+                    if ((endTime - startTime) < (WAIT_TIME + DELAYED_TIME) * 1000) {
+                        requestTradeStatus();
+                    } else {
+                        Log.i("okhttp", startTime + " " + endTime + " " + (endTime - startTime));
+                    }
                 } else if (1 == tradeStatus.getStatus()) {
                     Log.i(LOG_CHANGE, "付款成功，将要给卡充值");
                     sendSuccTradeData(tradeStatus);

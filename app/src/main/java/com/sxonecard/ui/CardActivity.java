@@ -44,6 +44,7 @@ import com.sxonecard.util.DownLoadFile;
 import com.sxonecard.util.LogcatHelper;
 import com.sxonecard.util.PrinterTestUtil;
 
+import java.io.DataOutputStream;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Timer;
@@ -529,5 +530,23 @@ public class CardActivity extends FragmentActivity {
                 activity.changeAction(msg.what, msg.obj);
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE //声明页面内容不会随着导航栏和状态栏变化
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION //初始化时默认导航栏已隐藏
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN //初始化时默认状态栏导航栏都已隐藏
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY //显示状态栏和导航栏后，延时自动隐藏
+        );
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
     }
 }

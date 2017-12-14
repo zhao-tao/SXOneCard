@@ -35,15 +35,18 @@ public class LogcatHelper {
 
     public void start() {
         String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-        PATH_LOGCAT = path + File.separator+"citypass";
-        File dir = new File(path+File.separator+"citypass");
-        if(!dir.exists()){
+        PATH_LOGCAT = path + File.separator + "citypass";
+        File dir = new File(path + File.separator + "citypass");
+        if (!dir.exists()) {
             dir.mkdir();
         }
 
-        if (mLogDumper == null)
+        if (mLogDumper == null) {
             mLogDumper = new LogDumper(String.valueOf(mPId), PATH_LOGCAT);
-        mLogDumper.start();
+        }
+        if (!mLogDumper.isAlive()) {
+            mLogDumper.start();
+        }
     }
 
     public void stop() {
@@ -66,7 +69,7 @@ public class LogcatHelper {
             mPID = pid;
             try {
                 File file = new File(dir, "logcat-" + simpleDateFormat2.format(new Date()) + ".log");
-                if(!file.exists())
+                if (!file.exists())
                     file.createNewFile();
                 out = new FileOutputStream(file, true);
             } catch (FileNotFoundException e) {

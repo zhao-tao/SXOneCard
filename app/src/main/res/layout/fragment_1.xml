@@ -37,8 +37,9 @@
             android:id="@+id/gongjiaoka"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="230dp"
-            android:layout_marginRight="230dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="250dp"
+            android:layout_marginRight="250dp"
             android:scaleType="fitXY"
             android:src="@drawable/gongjiaoka" />
     </LinearLayout>

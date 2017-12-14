@@ -120,7 +120,7 @@ public class HeartBeatBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void updateAds(final Context context) {
-        if (isSendAds()) {
+        if (isSendAds() && !TextUtils.isEmpty(CardApplication.IMEI)) {
             HttpDataListener listener2 = new HttpDataListener<AdResult>() {
                 @Override
                 public void onNext(AdResult result) {
@@ -200,8 +200,6 @@ public class HeartBeatBroadcastReceiver extends BroadcastReceiver {
             }
         }
     }
-
-
 
 
     /**
