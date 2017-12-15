@@ -17,6 +17,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
+import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -186,14 +188,15 @@ public class CardActivity extends FragmentActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(CardActivity.this);
                 builder.setView(editText);
                 dialog = builder.show();
+                editText.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        if (editText.getText().toString().equals("111")) {
+                        if (TextUtils.isEmpty(editText.getText().toString()) || !editText.getText().toString().equals("159")) {
+                            dialog.dismiss();
+                        } else {
                             sendBroadcast(new Intent("com.jld.action.displaySystemUI"));
                             System.exit(0);
-                        } else {
-                            dialog.dismiss();
                         }
                         return true;
                     }
