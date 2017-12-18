@@ -11,12 +11,15 @@ import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.sxonecard.background.OrderDb;
 import com.sxonecard.base.CrashHandler;
+import com.sxonecard.http.Constants;
 import com.sxonecard.http.bean.AdBean;
+import com.sxonecard.http.bean.ReChangeSQL;
 import com.sxonecard.http.bean.RechargeCardBean;
 import com.sxonecard.http.bean.SetBean;
 
 import org.litepal.LitePalApplication;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -34,6 +37,8 @@ public class CardApplication extends LitePalApplication {
     public RechargeCardBean checkCard;
     //    当前订单id
     private String currentOrderId;
+    //当前补充值的卡信息
+    public static ReChangeSQL reChangeSQL;
 
 
     //    首次请求获取的配置
@@ -107,8 +112,10 @@ public class CardApplication extends LitePalApplication {
                 .build();
         ImageLoader.getInstance().init(configuration);
         OrderDb.init(getApplicationContext());
-        CrashHandler crashHandler = CrashHandler.getInstance();
-        crashHandler.init(this);
+        if (!Constants.isDebug) {
+            CrashHandler crashHandler = CrashHandler.getInstance();
+            crashHandler.init(this);
+        }
     }
 
     public int getTimeCount() {
@@ -145,5 +152,10 @@ public class CardApplication extends LitePalApplication {
 
     public void setCurrentOrderId(String currentOrderId) {
         this.currentOrderId = currentOrderId;
+    }
+
+    public static String DoubleToString(double price) {
+        DecimalFormat df = new DecimalFormat("####.##");
+        return df.format(price);
     }
 }

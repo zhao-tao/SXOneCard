@@ -4,6 +4,7 @@ package com.sxonecard.http.bean;
  * Created by pc on 2017-04-28.
  * 充值所需的信息
  * 生成二维码并充值的信息
+ * 注意：rechangeFee为整数
  */
 
 public class ChangeData {

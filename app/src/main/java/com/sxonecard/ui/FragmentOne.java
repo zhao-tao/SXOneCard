@@ -21,7 +21,6 @@ import com.sxonecard.http.bean.RechargeCardBean;
 import org.litepal.crud.DataSupport;
 
 import java.lang.ref.WeakReference;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -31,6 +30,9 @@ import butterknife.Bind;
 import rx.Observable;
 import rx.functions.Action1;
 
+import static com.sxonecard.CardApplication.a_money;
+import static com.sxonecard.CardApplication.b_money;
+import static com.sxonecard.CardApplication.reChangeSQL;
 import static com.sxonecard.http.Constants.PAGE_CHOOSE_SERVICE;
 import static com.sxonecard.http.Constants.PAGE_RECHANGE;
 
@@ -110,6 +112,9 @@ public class FragmentOne extends BaseFragment {
                     dialog.dismiss();
                 Gson gson = new Gson();
                 RechargeCardBean checkCardBean = gson.fromJson(ckeckCardjson, RechargeCardBean.class);
+
+                a_money = checkCardBean.getAmount() * 1.0 / 100;
+
                 if (checkCardBean == null)
                     return;
 
@@ -132,41 +137,33 @@ public class FragmentOne extends BaseFragment {
                 if (checkCardBean.getStatus().equalsIgnoreCase("01")) {
                     CardApplication.getInstance().setCheckCard(checkCardBean);
                     Log.i("checkCard", "正常卡" + checkCardBean.getCardNO());
-
+//                    清除补充值次数为0的数据库数据
+                    DataSupport.deleteAll(ReChangeSQL.class, "ChangeTime=?", "0");
                     // TODO: 2017/12/6 获取补充值暂存信息(删除过期的补充值信息，遍历卡号)
-                    List<ReChangeSQL> all = DataSupport.findAll(ReChangeSQL.class);
-                    if (null != all && all.size() != 0) {
+                    List<ReChangeSQL> reChangeData = DataSupport.findAll(ReChangeSQL.class);
+                    if (null != reChangeData && reChangeData.size() != 0) {
                         int index = -1;
-                        for (int i = 0; i < all.size(); i++) {
+                        for (int i = 0; i < reChangeData.size(); i++) {
 //                            判断30分钟以上的失败交易,补充值过期删除记录
-                            if (System.currentTimeMillis() - all.get(i).getTime() < 1800 * 1000) {
-                                if (all.get(i).getCard().equals(checkCardBean.getCardNO())) {
+                            if (System.currentTimeMillis() - reChangeData.get(i).getTime() < 1800 * 1000) {
+//                                当前卡号等于数据库中的补充值卡号
+                                if (reChangeData.get(i).getCard().equals(checkCardBean.getCardNO())) {
                                     index = i;
                                 }
                             } else {
-                                DataSupport.deleteAll(ReChangeSQL.class, "card=?", all.get(i).getCard());
+                                DataSupport.deleteAll(ReChangeSQL.class, "card=?", reChangeData.get(i).getCard());
                             }
                         }
                         if (index != -1) {
+                            reChangeSQL = reChangeData.get(index);
                             //修改当前交易订单号
-                            CardApplication.getInstance().setCurrentOrderId(all.get(index).getOrderId());
-
-                            //写入充值信息，跳转到补充值页面
-                            Message msg = new Message();
-                            msg.what = PAGE_RECHANGE;
-                            msg.obj = all.get(index).getMoney();
-                            navHandle.sendMessage(msg);
+                            CardApplication.getInstance().setCurrentOrderId(reChangeData.get(index).getOrderId());
+                            b_money = Double.parseDouble(reChangeData.get(index).getMoney());
+                            navHandle.sendEmptyMessage(PAGE_RECHANGE);
                             return;
                         }
-
                     }
-                    Message msg = new Message();
-                    msg.what = PAGE_CHOOSE_SERVICE;
-                    double balance = checkCardBean.getAmount() * 1.0 / 100;
-                    DecimalFormat df = new DecimalFormat("######0.00");
-                    msg.obj = df.format(balance);
-                    navHandle.sendMessage(msg);
-
+                    navHandle.sendEmptyMessage(PAGE_CHOOSE_SERVICE);
                 } else {
                     Log.i("checkCard", "无效卡");
                     handler.sendEmptyMessage(2);

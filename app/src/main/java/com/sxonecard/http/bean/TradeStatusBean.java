@@ -2,7 +2,7 @@ package com.sxonecard.http.bean;
 
 /**
  * Created by Administrator on 2017/4/29 0029.
- * 支付状态
+ * 支付状态，传递给串口的数据
  * price:需要实际价格乘100
  * status：0 未成功 1 成功
  */

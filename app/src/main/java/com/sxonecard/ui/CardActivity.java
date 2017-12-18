@@ -157,7 +157,6 @@ public class CardActivity extends FragmentActivity {
             public void onClick(View v) {
 //                测试打印小票
                 PrinterTestUtil.getInstance().send();
-
 //                sendBroadcast(new Intent("com.jld.action.hideSystemUI"));
 //                sendBroadcast(new Intent("com.jld.action.displaySystemUI"));
             }

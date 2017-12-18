@@ -21,6 +21,8 @@ import java.util.List;
 
 import butterknife.Bind;
 
+import static com.sxonecard.CardApplication.a_money;
+
 
 /**
  * 选择充值方式
@@ -48,12 +50,7 @@ public class FragmentTwo extends BaseFragment {
     public void initView() {
         setVoice(SoundService.WUQUZOUKAPIAN);
         Bundle bundle = getArguments();
-        if (bundle != null) {
-            String money = (String) bundle.get("msg");
-            CardApplication.a_money = Double.parseDouble(money);
-            userMoney.setText("当前余额：" + money + "元");
-        }
-//        dataList = getData();
+        userMoney.setText("当前余额：" + a_money + "元");
         serviceTypeView.setAdapter(new CommonAdapter<Integer>(
                 getContext(), R.layout.item_service_type_2, services) {
             @Override

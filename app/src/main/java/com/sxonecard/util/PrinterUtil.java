@@ -4,8 +4,12 @@ package com.sxonecard.util;
  * Created by Administrator on 2017-5-23.
  */
 
+import android.util.Log;
+
 import com.sxonecard.CardApplication;
 import com.sxonecard.http.DateUtil;
+
+import org.litepal.util.LogUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,11 +18,12 @@ import java.io.OutputStream;
 
 import android_serialport_api.SerialPort;
 
+import static com.sxonecard.CardApplication.a_money;
+
 /**
  * 串口操作类
  *
  * @author Jerome
- *
  */
 public class PrinterUtil {
     private SerialPort mSerialPort;
@@ -50,12 +55,14 @@ public class PrinterUtil {
         }
     }
 
-    public void send(){
+    public void send() {
 
         String orderid = CardApplication.getInstance().getCurrentOrderId();
         String time = DateUtil.getCurrentTime();
         double b_money = CardApplication.b_money;
-        double money = CardApplication.a_money + CardApplication.b_money;
+        double money = a_money + CardApplication.b_money;
+
+        Log.d("print", a_money + " " + b_money + " " + money);
 
         try {
             PRINT_ALIGN_CENTER();
@@ -69,20 +76,20 @@ public class PrinterUtil {
             PRINT_ALIGN_LEFT();
             /*正常字体*/
             PRINT_NORMAL_FONT();
-            sendCmds("订单编号："+orderid);
+            sendCmds("订单编号：" + orderid);
             PRINT_LR();
-            sendCmds("充值时间："+time);
+            sendCmds("充值时间：" + time);
             PRINT_LR();
             PRINT_LR();
-            sendCmds("充值金额："+b_money+"元");
+            sendCmds("充值金额：" + b_money + "元");
             PRINT_LR();
-            sendCmds("当前金额："+money+"元");
+            sendCmds("当前金额：" + money + "元");
             PRINT_LR();
             String chong_type = "微信支付";
-            if(CardApplication.chong_type == 2){
+            if (CardApplication.chong_type == 2) {
                 chong_type = "支付宝支付";
             }
-            sendCmds("充值方式："+chong_type);
+            sendCmds("充值方式：" + chong_type);
 
             PRINT_LR();
             PRINT_LR();
@@ -110,7 +117,7 @@ public class PrinterUtil {
 
 
             PRINT_CUT_PAPER();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -164,50 +171,51 @@ public class PrinterUtil {
     }
 
     private void PRINT_CLR_BUFFER() throws IOException {
-        sendBuffer(new byte[]{0x1B,0x40});
+        sendBuffer(new byte[]{0x1B, 0x40});
     }
 
     private void PRINT_DOUBLE_FONT() throws IOException {
-        sendBuffer(new byte[]{0x1B,0x21,0x30});
+        sendBuffer(new byte[]{0x1B, 0x21, 0x30});
     }
 
     private void PRINT_NORMAL_FONT() throws IOException {
-        sendBuffer(new byte[]{0x1B,0x21,0x00});
+        sendBuffer(new byte[]{0x1B, 0x21, 0x00});
     }
 
     private void PRINT_ALIGN_LEFT() throws IOException {
-        sendBuffer(new byte[]{0x1B,0x61,0x30});
+        sendBuffer(new byte[]{0x1B, 0x61, 0x30});
     }
+
     private void PRINT_ALIGN_RIGHT() throws IOException {
-        sendBuffer(new byte[]{0x1B,0x61,0x32});
+        sendBuffer(new byte[]{0x1B, 0x61, 0x32});
     }
 
     private void PRINT_BARCODE_WIDTH() throws IOException {
-        sendBuffer(new byte[]{0x1D,0x77,0x02});
+        sendBuffer(new byte[]{0x1D, 0x77, 0x02});
     }
 
     private void PRINT_BARCODE_HEIGHT() throws IOException {
-        sendBuffer(new byte[]{0x1d,0x68,0x60});//x1D\x68\x60
+        sendBuffer(new byte[]{0x1d, 0x68, 0x60});//x1D\x68\x60
     }
 
     private void PRINT_BARCODE_WRT_ASC() throws IOException {
-        sendBuffer(new byte[]{0x1D,0x48,0x02});
+        sendBuffer(new byte[]{0x1D, 0x48, 0x02});
     }
 
     private void PRINT_BARCODE_DATA_CODE128() throws IOException {
-        sendBuffer(new byte[]{0x1D,0x6B,0x48});
+        sendBuffer(new byte[]{0x1D, 0x6B, 0x48});
     }
 
     private void PRINT_CUT_PAPER() throws IOException {
-        sendBuffer(new byte[]{0x1B,0x69});
+        sendBuffer(new byte[]{0x1B, 0x69});
     }
 
     private void PRINT_LR() throws IOException {
-        sendBuffer(new byte[]{0xD,0xA});
+        sendBuffer(new byte[]{0xD, 0xA});
     }
 
     private void PRINT_ALIGN_CENTER() throws IOException {
-        sendBuffer(new byte[]{0x1B,0x61,0x31});
+        sendBuffer(new byte[]{0x1B, 0x61, 0x31});
     }
 
 }

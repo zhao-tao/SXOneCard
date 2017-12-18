@@ -1,5 +1,6 @@
 package com.sxonecard.ui;
 
+import android.content.ContentValues;
 import android.os.Message;
 import android.view.View;
 import android.widget.TextView;
@@ -13,8 +14,12 @@ import com.sxonecard.http.bean.ReChangeSQL;
 
 import org.litepal.crud.DataSupport;
 
+import java.text.DecimalFormat;
+
 import butterknife.Bind;
 
+import static com.sxonecard.CardApplication.b_money;
+import static com.sxonecard.CardApplication.reChangeSQL;
 import static com.sxonecard.http.Constants.PAGE_CHECK_CARD;
 import static com.sxonecard.http.Constants.PAGE_QR_CODE;
 
@@ -35,7 +40,6 @@ public class FragmentReChange extends BaseFragment {
     TextView tvReFund;
     @Bind(R.id.tv_back)
     TextView mBackTv;
-    private String msg;
 
     @Override
     public int getLayoutId() {
@@ -46,8 +50,7 @@ public class FragmentReChange extends BaseFragment {
     public void initView() {
         //播放补充值操作语音
 //        setVoice(SoundService.RECHANGE);
-        msg = getArguments().getString("msg");
-        userRechargeMoney.setText("可补充值金额:" + msg + "元");
+        userRechargeMoney.setText("可补充值金额:" + CardApplication.DoubleToString(b_money) + "元");
         mBackTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,10 +65,14 @@ public class FragmentReChange extends BaseFragment {
         tvReChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//删除本条补充值记录
-                DataSupport.deleteAll(ReChangeSQL.class, "card=?", CardApplication.getInstance().getCheckCard().getCardNO());
+                ContentValues values = new ContentValues();
+                values.put("ChangeTime", reChangeSQL.getChangeTime() - 1);
+                DataSupport.updateAll(ReChangeSQL.class, values, "card=?", CardApplication.getInstance().getCheckCard().getCardNO());
+
                 Message msgCode = Message.obtain();
                 ChangeData changeData = new ChangeData();
-                changeData.setRechangeFee(msg);
+                DecimalFormat df = new DecimalFormat("######.##");
+                changeData.setRechangeFee(CardApplication.DoubleToString(b_money));
                 // 利用gson对象生成json字符串
                 Gson gson = new Gson();
                 msgCode.obj = gson.toJson(changeData);
@@ -77,7 +84,10 @@ public class FragmentReChange extends BaseFragment {
         tvReFund.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DataSupport.deleteAll(ReChangeSQL.class, "card=?", CardApplication.getInstance().getCheckCard().getCardNO());
+                ContentValues values = new ContentValues();
+                values.put("ChangeTime", reChangeSQL.getChangeTime() - 1);
+                DataSupport.updateAll(ReChangeSQL.class, values, "card=?", CardApplication.getInstance().getCheckCard().getCardNO());
+
                 navHandle.sendEmptyMessage(PAGE_CHECK_CARD);
             }
         });

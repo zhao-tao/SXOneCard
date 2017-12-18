@@ -17,6 +17,7 @@ import com.sxonecard.http.HttpRequestProxy;
 import com.sxonecard.http.MyCountDownTimer;
 import com.sxonecard.util.DateTools;
 import com.sxonecard.util.PrinterUtil;
+import com.sxonecard.util.StatusUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,7 @@ import java.util.Map;
 import butterknife.Bind;
 
 import static com.sxonecard.CardApplication.a_money;
+import static com.sxonecard.http.Constants.PAGE_CHECK_CARD;
 
 /**
  * Created by pc on 2017-04-27.
@@ -58,7 +60,7 @@ public class FragmentSeven extends BaseFragment {
 
             @Override
             public void onFinish() {
-                navHandle.sendEmptyMessage(0);
+                navHandle.sendEmptyMessage(PAGE_CHECK_CARD);
             }
         };
         timer.start();
@@ -70,57 +72,13 @@ public class FragmentSeven extends BaseFragment {
             }
         });
 
-        uploadTradeData();
+        StatusUtil.uploadTradeData();
         mBackTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navHandle.sendEmptyMessage(0);
+                navHandle.sendEmptyMessage(PAGE_CHECK_CARD);
             }
         });
-    }
-
-    /**
-     * 上传交易数据.
-     */
-    private void uploadTradeData() {
-        final Map<String, String> jsonObj = new HashMap<>(10);
-        HttpDataListener tradeListener = new HttpDataListener<String>() {
-            @Override
-            public void onNext(String tradeStatusBean) {
-
-            }
-
-            @Override
-            public void onError(Context context, int code, String msg) {
-                super.onError(context, code, msg);
-                Gson gson = new Gson();
-                OrderDb.insert(gson.toJson(jsonObj));
-                uploadTradeData();
-            }
-        };
-
-        jsonObj.put("LiushuiId", String.valueOf(System.currentTimeMillis()));
-        jsonObj.put("Time", DateTools.getCurrent());
-        jsonObj.put("ImeiId", CardApplication.IMEI);
-        jsonObj.put("Type", String.valueOf(1000));
-        jsonObj.put("Operator", "tom");
-        jsonObj.put("ReaderSn", "111");
-        jsonObj.put("ReaderVer", "111");
-        jsonObj.put("CorpCode", "111");
-        jsonObj.put("MerchantSn", "1111");
-        jsonObj.put("TradeData", "111");
-        jsonObj.put("OrderType", "1");
-
-        jsonObj.put("OrderId", CardApplication.getInstance().getCurrentOrderId());
-        jsonObj.put("CardNo", CardApplication.getInstance().getCheckCard().getCardNO() + "");
-        jsonObj.put("mCardType", CardApplication.getInstance().getCheckCard().getType());
-//        充值前金额
-        jsonObj.put("oldMoney", String.valueOf(a_money));
-//        充值后余额
-        jsonObj.put("newMoney", msg);
-
-        HttpRequestProxy.getInstance().uploadTrade(new HttpDataSubscriber(tradeListener,
-                getContext(), false), jsonObj);
     }
 
     @Override
