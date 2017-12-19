@@ -1,6 +1,7 @@
 package com.sxonecard.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -22,10 +23,8 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +46,7 @@ import com.sxonecard.http.bean.SetBean;
 import com.sxonecard.util.DateTools;
 import com.sxonecard.util.DownLoadFile;
 import com.sxonecard.util.LogcatHelper;
-import com.sxonecard.util.PrinterTestUtil;
+import com.sxonecard.util.PrinterUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -73,19 +72,15 @@ import static com.sxonecard.http.Constants.isDebug;
 import static com.sxonecard.http.Constants.isRechange;
 
 /**
- * @Author
+ * @Author 全屏和退出全屏的代码
+ * //                sendBroadcast(new Intent("com.jld.action.hideSystemUI"));
+ * //                sendBroadcast(new Intent("com.jld.action.displaySystemUI"));
  */
 
 public class CardActivity extends FragmentActivity {
     private static String TAG = "CardActivity";
-    @Bind(R.id.ll_test)
-    LinearLayout llTest;
     @Bind(R.id.iv_logo)
     ImageView ivLogo;
-    @Bind(R.id.btn_exit)
-    Button btnExit;
-    @Bind(R.id.btn_print)
-    Button btnPrint;
     @Bind(R.id.full_bottom)
     View btnFull;
 
@@ -98,7 +93,11 @@ public class CardActivity extends FragmentActivity {
     private String curr_ads = "";
     private int current_fragment = 0;
 
+    //    连击出现关闭应用的次数
     long[] mHits = new long[5];
+
+    //    当前测试选择的操作
+    private int Choose;
 
     //    TODO:定时关机
     private Handler deviceHandler = new Handler() {
@@ -135,36 +134,18 @@ public class CardActivity extends FragmentActivity {
         registerBus();
         initDevice();
         setListener();
-        if (isDebug) {
-            ivLogo.setVisibility(View.GONE);
-        } else {
-            llTest.setVisibility(View.GONE);
-        }
+
         // FIXME: 2017/11/17 本地记录特定的Log日志文件
         LogcatHelper.getInstance().start();
     }
 
     private void setListener() {
-        btnExit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SerialPort.getInstance().exitDevice();
-            }
-        });
-
-        btnPrint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                测试打印小票
-                PrinterTestUtil.getInstance().send();
-//                sendBroadcast(new Intent("com.jld.action.hideSystemUI"));
-//                sendBroadcast(new Intent("com.jld.action.displaySystemUI"));
-            }
-        });
-
         ivLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isDebug) {
+                    showTestDialog();
+                }
             }
         });
 
@@ -210,6 +191,48 @@ public class CardActivity extends FragmentActivity {
                 }, 3000);
             }
         });
+    }
+
+    /**
+     * 测试功能选择执行
+     */
+    private void showTestDialog() {
+        Choose = 0;
+        String[] items = {"就看看什么都不干", "关闭当前应用", "重启Android主板", "打印小票", "签退操作"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(CardActivity.this);
+        builder.setTitle("请谨慎选择！！！").setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Choose = which;
+            }
+        }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (Choose) {
+                    case 0:
+                        break;
+                    case 1:
+                        sendBroadcast(new Intent("com.jld.action.displaySystemUI"));
+                        System.exit(0);
+                        break;
+                    case 2:
+                        Toast.makeText(CardActivity.this, "待添加功能", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 3:
+                        PrinterUtil.getInstance().send();
+                        break;
+                    case 4:
+                        SerialPort.getInstance().exitDevice();
+                        break;
+                }
+                dialog.dismiss();
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
     }
 
     /**

@@ -11,30 +11,6 @@
         android:layout_marginLeft="70dp"
         android:src="@drawable/logo" />
 
-    <LinearLayout
-        android:id="@+id/ll_test"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btn_exit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="签退（不要点）"
-            android:textSize="20dp" />
-
-        <Button
-            android:id="@+id/btn_print"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="打印"
-            android:textSize="20dp" />
-
-    </LinearLayout>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
